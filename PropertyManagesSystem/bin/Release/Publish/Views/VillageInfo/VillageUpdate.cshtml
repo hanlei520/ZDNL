@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Content/Home/layui/layui.js"></script>
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <div class="layui-col-md8">
+        <form class="layui-form layui-form-pane" lay-filter="form_add" action="/VillageInfo/Update" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">小区账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="VillageID" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.VillageID" readonly="readonly" style="color:red">
+                </div>
+                <label class="layui-form-label">小区名字</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="VillageName" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.VillageName">
+                </div>
+                </div>
+
+
+
+
+
+                <div class="layui-form-item" style="text-align:center">
+                    <button class="layui-btn" lay-submit="" lay-filter="btn_add"><i class="layui-icon layui-icon-ok"></i> 确认修改</button>
+                </div>
+        </form>
+    </div>
+
+    <script>
+
+        //使用jq给下拉框赋值
+        @*$('#sexid').val(@ViewBag.model.Sex);*@
+
+
+
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+
+
+
+        });
+    </script>
+</body>
+</html>

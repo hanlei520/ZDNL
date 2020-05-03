@@ -1,0 +1,157 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">小区</label>
+            <div class="layui-input-block">
+                <select name="VillageID" id="VillageID">
+                    @foreach (var item in @ViewBag.Village)
+                    {
+                        <option value=@item.VillageID>@item.VillageName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">楼栋编号</label>
+            <div class="layui-input-block">
+                <select name="FloorID" id="FloorID">
+                    @foreach (var item in @ViewBag.FloorInfo)
+                    {
+                        <option value=@item.FloorID>@item.FloorName</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">房屋编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="HousID" value="@ViewBag.HouseInfo.HousID" readonly="readonly" lay-verify="required" class="layui-input" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">户型</label>
+            <div class="layui-input-block">
+                <input type="text" name="HouseType" lay-verify="required" lay-reqtext="户型不能为空" placeholder="请输入户型" class="layui-input" value="@ViewBag.HouseInfo.HouseType">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">房屋面积</label>
+            <div class="layui-input-block">
+                <input type="text" name="HouseArea" lay-verify="required|numer" lay-reqtext="房屋面积不能为空" placeholder="请输入房屋面积" class="layui-input" value="@ViewBag.HouseInfo.HouseArea">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">物业费</label>
+            <div class="layui-input-block">
+                <input type="text" name="PropertyCost" lay-verify="required|numer" lay-reqtext="物业费不能为空" placeholder="请输入物业费" class="layui-input" value="@ViewBag.HouseInfo.PropertyCost">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">用途</label>
+            <div class="layui-input-block">
+                <select name="Purpose" id="Purpose" lay-verify="required">
+                    <option value="">请选择</option>
+                    <option value="自住">自住</option>
+                    <option value="出租">出租</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">状态</label>
+            <div class="layui-input-block">
+                <select name="State" id="State">
+                    <option value="False" disabled="">已售</option>
+                    <option value="True" disabled="">未售</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+
+        //使用jq给下拉框赋值
+        $('#Villageid').val(@ViewBag.HouseInfo.VillageID);
+        $('#Floorid').val('@ViewBag.HouseInfo.FloorID');
+        $('#Userid').val('@ViewBag.HouseInfo.UserID');
+        $('#Purpose').val('@ViewBag.HouseInfo.Purpose');
+        $('#State').val('@ViewBag.HouseInfo.State');
+
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+                , layer = layui.layer
+                , $ = layui.$
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+
+                numer: function (value) {
+
+                     var res = /^[1-9]{1}[0-9]*$/;
+                    if (!res.test(value)) {
+                        return '请输入大于零的数字！';
+                    }
+                },
+            });
+
+                        //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var HouseInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/HouseInfo/HouseInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        HouseInfoJson: HouseInfoJson
+                    },
+                    success: function (data) {
+                        if (data == "ok") {
+                            var index = layer.alert("修改成功", {
+                                title: '温馨提示'
+                            }, function () {
+                                // 关闭弹出层
+                                layer.close(index);
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(iframeIndex);
+                                    window.parent.btn_search();//刷新父窗口表格
+                            })
+                        }
+                        else {
+                            alert("修改失败，请重新修改！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+
+
+    </script>
+</body>
+</html>
+

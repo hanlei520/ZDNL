@@ -1,0 +1,61 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+    <script src="~/Content/Home/layui/layui.js"></script>
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-col-md8">
+        <form class="layui-form layui-form-pane" lay-filter="form_add" action="/User_ComplaInfo/Update" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">编号</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="ComplaID" value="@ViewBag.model.ComplaID" lay-verify="required" class="layui-input" style="color:red;"readonly="readonly">
+                </div>
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-inline">
+                    <select name="CompType" id="CompTypeID">
+                        <option value=建议 selected="selected">建议</option>
+                        <option value=投诉>投诉</option>
+                    </select>
+                </div>
+              
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="Phone" value="@ViewBag.model.Phone" lay-verify="required|phone" class="layui-input" style=" width:502px;">
+                </div>
+            </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="margin-top:35px;">内容</label>
+                    <div class="layui-input-inline ">
+                        @*<input type="text" name="Contents" lay-verify="required" class="layui-input">*@
+                        <textarea class="layui-input" name="Contents" id="ContentsID" lay-verify="required" placeholder="请填写内容" style="width:502px;height:102px;">@ViewBag.model.Contents</textarea>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="margin-top:35px;">备注</label>
+                    <div class="layui-input-inline ">
+                        <textarea class="layui-input" name="Remarks" id="RemarksID" placeholder="请填写备注" style="width:502px;height:102px;">@ViewBag.model.Remarks</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="text-align:center">
+                    <button class="layui-btn" lay-submit="" lay-filter="btn_update"><i class="layui-icon layui-icon-ok"></i> 确认</button>
+                </div>
+        </form>
+    </div>
+    <script>
+                $('#CompTypeID').val('@ViewBag.model.CompType');
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+
+        });
+    </script>
+</body>
+</html>

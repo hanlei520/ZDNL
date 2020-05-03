@@ -1,0 +1,53 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "Main/UserIndex"
+  },
+  "logoInfo": {
+    "title": "ZDNL小区",
+    "image": "Content/images/logo.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "常规管理",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "投诉建议",
+          "href": "User_ComplaInfo/User_ComplaInfoIndex",
+          "icon": "fa fa-comments-o",
+          "target": "_self"
+        },
+        {
+          "title": "报修",
+          "href": "User_RepairInfo/User_RepairIndex",
+          "icon": "fa fa-wrench",
+          "target": "_self"
+        },
+        {
+          "title": "我的费用",
+          "href": "",
+          "icon": "fa fa-jpy",
+          "target": "_self",
+          "child": [
+            {
+              "title": "水电费用",
+              "href": "User_CostInfo/User_CostIndex",
+              "icon": "fa fa-tint",
+              "target": "_self"
+            },
+            {
+              "title": "物业费用",
+              "href": "User_PropertyInfo/User_PropertyIndex",
+              "icon": "fa fa-calendar",
+              "target": "_self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

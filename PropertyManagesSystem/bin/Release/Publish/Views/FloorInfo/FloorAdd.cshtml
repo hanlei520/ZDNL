@@ -1,0 +1,83 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddIndex</title>
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Content/Home/layui/layui.js"></script>
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <div class="layui-col-md8">
+        <form class="layui-form layui-form-pane" lay-filter="form_add" action="/FloorInfo/Add" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">楼栋编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="FloorID" lay-verify="required|isrepeat|maxlength" placeholder="请输入" class="layui-input">
+                </div>
+                <label class="layui-form-label">楼栋名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="FloorName" lay-verify="required" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="Remarks"   class="layui-input">
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <div class="layui-form-item" style="text-align:center">
+                <button class="layui-btn" lay-submit="" lay-filter="btn_add"><i class="layui-icon layui-icon-ok"></i> 确认添加</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+                maxlength: function (value) {
+                    if (value.length > 16) {
+                        return '不能超过16个字符';
+                    }
+                }
+                //判断楼栋编号是否存在
+                , isrepeat: function (value) {
+                    debugger;
+                    var callbackdata;
+                    $.ajax({
+                        url: "/FloorInfo/CheckRepeat",
+                        type: "post",
+                        async: false,//同步-保证验证通过之后，才执行表单的提交
+                        data: {
+                            value: value
+                        },
+                        success: function (data) {
+                            callbackdata = data;
+
+                        }
+                    });
+                    if (callbackdata == "no") {
+                        return ("同一楼栋名的信息已存在，请添加其他楼栋信息！");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

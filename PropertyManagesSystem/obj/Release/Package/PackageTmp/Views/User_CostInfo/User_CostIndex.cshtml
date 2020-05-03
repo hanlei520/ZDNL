@@ -1,0 +1,144 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>User_CostIndex</title>
+    @Styles.Render("~/CostInfo/css")
+</head>
+<body>
+    <div class="layui-row layui-form">
+        <div class="layui-input-inline layui-col-md1  " style="margin-top:20px;margin-left:20px;">
+            <div class="layui-input-inline">
+                <input type="text" name="RsubmitDate" id="date1" lay-verify="date" placeholder="开始日期" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-input-inline layui-col-md1  " style="margin-top:20px;margin-left:20px;">
+            <div class="layui-input-inline">
+                <input type="text" name="RsolveDate" id="date2" lay-verify="date" placeholder="截止日期" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-input-inline layui-col-md2  " style="margin-top:20px;margin-left:20px;">
+            <select name="modules" lay-verify="required" lay-search="" id="StateID">
+                <option value="">请选择</option>
+                <option value="1">未缴费</option>
+                <option value="0">已缴费</option>
+
+            </select>
+        </div>
+        <div class="layui-col-md1" style="margin-top:20px;">
+            <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button>
+        </div>
+    </div>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+    @Scripts.Render("~/CostInfo/js")
+    <script type="text/html" id="stateTpl">
+        {{#  if(d.State == 0){ }}
+        <span style="color: #5FB878;">已缴费</span>
+        {{#  } else { }}
+        <span style="color: #FF5722;">未缴费</span>
+        {{#  } }}
+    </script>
+
+
+
+    <script>
+
+        //使用layui的table模块
+        //使用layui的table模块
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form;
+            var layedit = layui.layedit;
+            var laydate = layui.laydate;
+            //日期
+            laydate.render({
+                elem: '#date1'
+            });
+            laydate.render({
+                elem: '#date2'
+            });
+            form.render();
+        });
+        var table;
+
+        layui.use('table', function () {
+            //实例化layui的table模块
+            table = layui.table;
+
+            //渲染表格
+            table.render({
+                elem: '#test'//把表格渲染在id为test的标签中
+                , url: '/User_CostInfo/GetCostInfo'//数据接口，即后台地址
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+                , title: '用户数据表'
+
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'ID', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'CostID', title: '费用编号' }
+                    , { field: 'CostName', title: '费用名称', sort: true }
+                    , { field: 'UserName', title: '业主', sort: true }
+                    , { field: 'HousID', title: '房屋编号' }
+                    , { field: 'RsubmitDate', title: '开始时间', sort: false }
+                    , { field: 'RsolveDate', title: '结束时间', sort: false }
+                    , { field: 'WaterMeter', title: '水表度数', sort: true }
+                    , { field: 'ElectricMete', title: '电表度数', sort: true }
+                    , { field: 'WaterPrice', title: '水费单价', sort: true }
+
+                    , { field: 'WirePrice', title: '电费单价', sort: true }
+                    , { field: 'SumMoney', title: '总价', sort: true }
+                    , { field: 'Name', title: '录入员', sort: true }
+                    , { field: 'State', title: '状态', sort: true, templet: '#stateTpl' }
+
+                ]]
+                , page: true//是否开启分页
+            });
+
+        });
+        ;
+        //查询
+        btn_search = function () {
+            //获取文本框的值
+            
+            var RsubmitDate = $("#date1").val();
+            var RsolveDate = $("#date2").val();
+            if (RsubmitDate == "" && RsolveDate != "") {
+                layer.alert('请选择开始时间！');
+                return false;
+            }
+            if (RsolveDate == "" && RsubmitDate != "") {
+                layer.alert('请选择结束时间！');
+                return false;
+            }
+            if (RsubmitDate != '' && RsolveDate != '') {
+                if (RsubmitDate > RsolveDate) {
+                    layer.alert('结束时间不能小于开始时间！');
+                    return false;
+                }
+            }
+            var State = $("#StateID").val();
+            //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+            table.reload('test', {
+                url: '/User_CostInfo/GetCostInfo',
+                page: {
+                    curr: 1//从第一页开始
+                },
+                where: {
+                    RsubmitDate: RsubmitDate,
+                    RsolveDate: RsolveDate,
+                    //HouseID: HouseID,
+                    State: State,//设定异步数据接口的额外参数
+                }
+            });
+        };
+
+    </script>
+
+</body>
+</html>

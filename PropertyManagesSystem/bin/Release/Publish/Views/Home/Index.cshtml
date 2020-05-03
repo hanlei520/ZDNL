@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>ZDNL小区物业管理系统</title>
+    @*CSS资源文件*@
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" />
+    @*js资源文件*@
+    <script src="~/Content/Home/layui/layui.js"></script>
+    @*jq资源文件，其实layui已经集成*@
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">ZDNL小区物业管理系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right" lay-filter="test" id="NavLinks1">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        @ViewBag.userName
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data="/AdminInfo/AdminAlter">基本资料</a></dd>
+                        <dd><a href="javascript:;" data="/AdminInfo/AdminResetPwd">修改密码</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="/Login/ReLogin" onclick="return confirm('确定退出吗？')"><i class="layui-icon layui-icon-close"></i>退出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test" id="NavLinks">
+                    @if (@ViewBag.AdminRole.Contains("1")||@ViewBag.AdminRole.Contains("2"))
+                    {
+                        <li class="layui-nav-item">
+                            <a href="javascript:;"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe68e;</i>资产信息</a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="javascript:;" data="/HouseInfo/HouseIndex">房产管理</a></dd>
+                                <dd><a href="javascript:;" data="/VillageInfo/VillageIndex">我的小区</a></dd>
+                                <dd><a href="javascript:;" data="/FloorInfo/FloorIndex">楼栋信息</a></dd>
+                            </dl>
+                        </li>
+                    }
+
+                    <li class="layui-nav-item"><a href="javascript:;" data="/UserInfo/UserIndex"><i class="layui-icon" style="font-size: 15px; color: #009688;">&#xe613;</i>业主管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data="/ComplaInfo/ComplaIndex"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe63a;</i>投诉管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data="/RepairInfo/RepairIndex"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe631;</i>报修管理</a></li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe65e;</i>缴费管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data="/CostInfo/CostIndex">水电费用</a></dd>
+                            <dd><a href="javascript:;" data="/PropertyInfo/PropertyIndex">物业费用</a></dd>
+                        </dl>
+                    </li>
+                    @if (@ViewBag.AdminRole.Contains("1"))//如果用户的角色id字符串包含1，即为超级管理员，能看到下列的目录信息
+                    {
+                        <li class="layui-nav-item">
+                            <a href="javascript:;"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe716;</i>系统管理</a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="javascript:;" data="AdminInfo/AdminIndex">用户信息管理</a></dd>
+                                <dd><a href="javascript:;" data="/RoleInfo/RoleIndex">角色信息管理</a></dd>
+                            </dl>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;" id="divContent">
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <script type="text/javascript">
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+
+        });
+
+        //注册点击事件
+        $('#NavLinks a').on('click', function (e) {
+            //获取对应a标签的data属性值，因为属性值其实是一个地址字符串
+            var tabName = $(this).attr('data');
+            //根据data的地址字符串，局部加载页面
+            $('#divContent').load(tabName);
+
+        })
+         //注册点击事件
+        $('#NavLinks1 a').on('click', function (e) {
+            //获取对应a标签的data属性值，因为属性值其实是一个地址字符串
+            var tabName = $(this).attr('data');
+            //根据data的地址字符串，局部加载页面
+            $('#divContent').load(tabName);
+
+        })
+
+    </script>
+</body>
+</html>

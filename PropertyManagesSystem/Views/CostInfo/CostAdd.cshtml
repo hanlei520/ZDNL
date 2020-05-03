@@ -1,0 +1,186 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">费用名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="CostName" value="水电费" lay-verify="required|maxlength" lay-reqtext="费用名称不能为空" placeholder="请输入费用名称" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">房屋编号</label>
+            <div class="layui-input-block">
+                <select name="HousID" id="HousID">
+                    @foreach (var item in @ViewBag.houseInfo)
+                    {
+                        <option value=@item.HousID>@item.HousID</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">开始时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="RsubmitDate" id="date1" lay-verify="date" placeholder="请选择开始时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">结束时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="RsolveDate" id="date2" lay-verify="date" placeholder="请选择结束时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">水表度数</label>
+            <div class="layui-input-block">
+                <input type="text" name="WaterMeter" id="WaterMeter" lay-verify="required|numer" lay-reqtext="水表度数不能为空" placeholder="请输入水表度数" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">电表度数</label>
+            <div class="layui-input-block">
+                <input type="text" name="ElectricMete" id="ElectricMete" lay-verify="required|numer" lay-reqtext="电表度数不能为空" placeholder="请输入电表度数" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">水费单价</label>
+            <div class="layui-input-block">
+                <input type="text" name="WaterPrice" value="1" id="WaterPrice" lay-verify="required|numer" lay-reqtext="水费单价不能为空" placeholder="请输入水费单价" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">电费单价</label>
+            <div class="layui-input-block">
+                <input type="text" name="WirePrice" id="WirePrice" value="3" lay-verify="required|numer" lay-reqtext="电费单价不能为空" placeholder="请输入电费单价" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">总价</label>
+            <div class="layui-input-block">
+                <input type="text" name="SumMoney" value="0" id="SumMoney" lay-verify="required" class="layui-input" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="State" value="True" title="未缴费" checked="" id="stateRadio1">
+                <input type="radio" name="State" value="False" title="已缴费" id="stateRadio2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认添加</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+
+        //使用layui的form模块
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form//实例化
+                , layer = layui.layer,
+                $ = layui.$
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+
+
+            //日期
+            laydate.render({
+                elem: '#date1'
+            });
+            laydate.render({
+                elem: '#date2'
+            });
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+                maxlength: function (value) {
+                    if (value.length > 16) {
+                        return '不能超过16个字符';
+                    }
+                },
+
+                numer: function (value) {
+
+                    var res = /^\d+(\.\d+)?$/;
+                    if (!res.test(value)) {
+                        return '请输入大于0的数字！';
+                    }
+                },
+            });
+
+
+             //监听提交
+            form.on('submit(saveBtn)', function (data) {
+                //获取文本框的值
+                var selectInfo1 = $("#date1").val();
+                var selectInfo2 = $("#date2").val();
+                if (selectInfo1 != '' && selectInfo2 != '') {
+                    if (selectInfo1 > selectInfo2) {
+                        layer.alert('结束时间不能小于开始时间！');
+                        return false;
+                    }
+                }
+                var CostInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/CostInfo/CostInfoAdd',
+                    type: 'POST',
+                    data: {
+                        CostInfoJson: CostInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                            layer.alert("添加成功");
+                        }
+                        else {
+                            alert("添加失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+        //计算总金额
+        $("#WaterMeter,#WaterPrice,#ElectricMete,#WirePrice").on("input", function (e) {
+            $("#SumMoney").val(0);
+            var WaterMeter = $('#WaterMeter').val();//水表度数
+            var WaterPrice = $('#WaterPrice').val();//水费单价
+            var ElectricMete = $('#ElectricMete').val();//电表度数
+            var WirePrice = $('#WirePrice').val();//电费单价
+
+            var totalPrice1 = Number(WaterMeter) * Number(WaterPrice);//度数*单价  水
+            var totalPrice2 = Number(ElectricMete) * Number(WirePrice);//度数*单价  电
+            var Sum = Number(totalPrice1) + Number(totalPrice2);//计算总价
+            $("#SumMoney").val(Sum.toFixed(2)); //保留两位小数 显示到总价
+        });
+    </script>
+</body>
+</html>
+

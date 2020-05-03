@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>ZDNL小区</title>
+    @*jq资源文件，其实layui已经集成*@
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+    @*js资源文件*@
+    <script src="~/Content/Home/layui/layui.js"></script>
+    @*CSS资源文件*@
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" />
+
+
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">欢迎进入ZDNL小区</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right" id="NavLinks">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        @ViewBag.UserName
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data="/User_UserInfo/UserAlter">基本资料</a></dd>
+                        <dd><a href="javascript:;" data="/User_UserInfo/UserResetPwd">修改密码</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="/Login/ReLogin" onclick="return confirm('确定退出吗？')"><i class="layui-icon layui-icon-close"></i> 退出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test" id="NavLinks1">
+                    <li class="layui-nav-item"><a href="javascript:;" data="/User_ComplaInfo/User_ComplaInfoIndex"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe63a;</i>投诉建议</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data="/User_RepairInfo/User_RepairIndex"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe631;</i>报修</a></li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;"><i class="layui-icon" style="font-size: 20px; color: #009688;">&#xe65e;</i>我的费用</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data="/User_PropertyInfo/User_PropertyIndex">物业费</a></dd>
+                            <dd><a href="javascript:;" data="/User_CostInfo/User_CostIndex">水电费</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body" id="divContent">
+            <!-- 内容主体区域 -->
+        </div>
+
+
+    </div>
+    <script type="text/javascript">
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+
+        });
+
+        //注册点击事件
+        $('#NavLinks a').on('click', function (e) {
+            //获取对应a标签的data属性值，因为属性值其实是一个地址字符串
+            var tabName = $(this).attr('data');
+            //根据data的地址字符串，局部加载页面
+            $('#divContent').load(tabName);
+
+        })
+        //注册点击事件
+        $('#NavLinks1 a').on('click', function (e) {
+            //获取对应a标签的data属性值，因为属性值其实是一个地址字符串
+            var tabName = $(this).attr('data');
+            //根据data的地址字符串，局部加载页面
+            $('#divContent').load(tabName);
+
+        })
+    </script>
+</body>
+</html>

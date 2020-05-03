@@ -1,0 +1,166 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">业主账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="UserID" lay-verify="required|isrepeat" placeholder="请输入业主账号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">业主名字</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" lay-verify="required" placeholder="请输入业主名字" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">手机号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" lay-verify="required|phone" placeholder="请输入" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">身份编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="IDNumber" lay-verify="required|identity|isIDNumber" placeholder="请输入身份编号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="Sex" value="0" title="男" checked="" id="sexRadio1">
+                <input type="radio" name="Sex" value="1" title="女" id="sexRadio2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">房屋编号</label>
+            <div class="layui-input-block">
+                <select name="HousID" id="HousID">
+                    @foreach (var item in @ViewBag.houseInfo)
+                    {
+                        <option value=@item.HousID>@item.HousID (@item.Purpose)</option>
+                    }
+                </select>
+            </div>
+        </div>
+       
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认添加</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+                , layer = layui.layer
+                , $ = layui.$
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+                maxlength: function (value) {
+                    if (value.length > 16) {
+                        return '不能超过16个字符';
+                    }
+                }
+                //判断业主账号是否存在
+                , isrepeat: function (value) {
+                    ;
+                    var callbackdata;
+                    $.ajax({
+                        url: "/UserInfo/CheckRepeat",
+                        type: "post",
+                        async: false,//同步-保证验证通过之后，才执行表单的提交
+                        data: {
+                            value: value
+                        },
+                        success: function (data) {
+                            callbackdata = data;
+
+                        }
+                    });
+                    if (callbackdata == "no") {
+                        return ("同一业主名的信息已存在，请添加其他业主信息！");
+                    }
+                }
+                //判断业主身份证是否存在
+                , isIDNumber: function (value) {
+                    ;
+                    var callbackdata;
+                    $.ajax({
+                        url: "/UserInfo/CheckIDNumber",
+                        type: "post",
+                        async: false,//同步-保证验证通过之后，才执行表单的提交
+                        data: {
+                            value: value
+                        },
+                        success: function (data) {
+                            callbackdata = data;
+
+                        }
+                    });
+                    if (callbackdata == "no") {
+                        return ("同一业主的身份证信息已存在，请重新填写！");
+                    }
+                }
+            });
+
+                         //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var UserInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/UserInfo/UserInfoAdd',
+                    type: 'POST',
+                    data: {
+                        UserInfoJson: UserInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+
+                           var index = layer.alert("添加成功", {
+                                title: '温馨提示'
+                            }, function () {
+
+                                // 关闭弹出层
+                                layer.close(index);
+
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(iframeIndex);
+                           })
+                        }
+                        else {
+                            layer.alert("添加失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+
+        });
+    </script>
+</body>
+</html>

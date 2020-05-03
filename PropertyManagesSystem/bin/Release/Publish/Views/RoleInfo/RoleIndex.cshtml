@@ -1,0 +1,216 @@
+﻿
+<div class="layui-row">
+    <span>系统管理-->角色信息管理</span>
+</div>
+<div class="layui-row layui-form">
+
+    <div class="layui-col-md2 " style="margin-top:20px;margin-left:20px;"><input type="text" id="txt_Select" placeholder="请输入用户编号" class="layui-input"></div>
+    <div class="layui-col-md1" style="margin-top:20px"> <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button></div>
+</div>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-radius" lay-event="btn_add"><i class="layui-icon">&#xe608;</i>添加</button>
+        <button class="layui-btn layui-btn-radius" lay-event="btn_update"><i class="layui-icon">&#xe642;</i>修改</button>
+        <button class="layui-btn layui-btn-radius layui-btn-danger" lay-event="btn_delete"><i class="layui-icon"></i>删除</button>
+    </div>
+</script>
+
+<script type="text/html" id="checkboxTpl">
+
+
+    @*d.DelFlag == 0 ? 'checked' : ''  如果后台传来的DelFlag为0，按钮为选中状态*@
+    <input type="checkbox" name="lock" value="{{d.ID}}" title="开启角色" lay-filter="lockDemo" {{ d.DelFlag == 0 ? 'checked' : '' }}>
+</script>
+
+<script>
+
+    //使用layui的table模块
+
+    var table;
+
+    layui.use('table', function () {
+        //实例化layui的table模块
+        table = layui.table;
+
+        var form = layui.form;
+
+        //渲染表格
+        table.render({
+            elem: '#test'//把表格渲染在id为test的标签中
+            , url: '/RoleInfo/GetRoleInfo'//数据接口，即后台地址
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+            , title: '角色数据表'
+
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' }
+                , { field: 'ID', title: 'ID', sort: false, fixed: 'left' }
+                , { field: 'RoleID', title: '角色ID', sort: false, fixed: 'left' }
+                , { field: 'RoleName', title: '角色名称', sort: false }
+                , { field: 'Description', title: '角色描述', sort: false }
+                , { field: 'DelFlag', title: '是否禁用', width: 180, sort: true, templet: '#checkboxTpl' }
+
+
+
+            ]]
+            , page: true//是否开启分页
+        });
+        //监听锁定操作
+        form.on('checkbox(lockDemo)', function (obj) {
+            //debugger;
+            //layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+            $.ajax({
+
+                url: '/RoleInfo/ForbidUser',
+                type: 'post',
+                data: {
+                    id: this.value,
+                    flag: obj.elem.checked,
+                },
+                success: function (data) {
+                    layer.alert(data);
+                    //刷新表格
+                    btn_search();
+                }
+
+
+            })
+        });
+
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            debugger;
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'btn_add':
+
+                    //iframe窗--弹出添加窗体
+                    layer.open({
+                        type: 2,//iframe
+                        title: '角色信息添加',
+                        shade: 0.6,
+                        area: ['700px', '300px'],
+                        content: '/RoleInfo/RoleAdd',//页面地址
+                        cancel: function (index) {
+                            //关闭窗口
+                            layer.close(index);
+                            //重新加载表格
+                            btn_search();
+                        }
+                    });
+
+                    break;
+                case 'btn_update':
+                    debugger;
+                    //获取选中的信息
+                    var data = checkStatus.data;
+                    if (data.length == 1) {
+                        //转成json格式的字符串
+                        var strdata = JSON.stringify(data);
+                        //转成json对象
+                        var jsondata = JSON.parse(strdata);
+                        //获取id
+                        var id = jsondata[0].ID;
+                        //iframe窗--弹出添加窗体
+                        layer.open({
+                            type: 2,//iframe
+                            title: '角色信息修改',
+                            shade: 0.6,
+                            area: ['700px', '300px'],
+                            content: '/RoleInfo/RoleUpdate?id=' + id + '',//页面地址
+                            cancel: function (index) {
+                                //关闭窗口
+                                layer.close(index);
+                                //重新加载表格
+                                btn_search();
+                            }
+                        });
+                    } else {
+                        layer.alert("必须选中且只能选中一条数据！");
+                    }
+                    break;
+                case 'btn_delete':
+                  //获取选中的信息
+                    var data = checkStatus.data;
+                    if (data.length <= 0) {
+                        layer.alert("必须选中一条数据！");
+                    }
+                    else {
+                        //定义数组对象
+                        var mycars = new Array()
+                        //转成json格式的字符串
+                        var strdata1 = JSON.stringify(data);
+                        //转成json对象
+                        var jsondata1 = JSON.parse(strdata1);
+                        //循环取选中ID
+                        for (var i = 0; i < data.length; i++) {
+                            //获取id
+                            mycars[i] = jsondata1[i].ID;
+                        }
+                        //执行删除-->调用删除方法
+                        if (confirm("确定删除吗？删除将无法恢复！")) {
+                            btn_Delete(mycars);
+                        }
+                    }
+                    break;
+
+            };
+        });
+    });
+
+    //删除方法
+    btn_Delete = function (ID) {
+        debugger
+        $.ajax({
+            type: 'post',
+            url: '/RoleInfo/Delete',
+            data: {
+                id: ID,
+            },
+            success: function (data) {
+
+                if (data == "ok") {
+                    layer.alert("删除成功！");
+                    //重新加载表示
+                    btn_search();
+                }
+                else {
+                    layer.alert("删除失败！");
+                }
+            }
+        });
+    };
+
+
+    //查询
+    btn_search = function () {
+        //获取文本框的值
+        var selectInfo = $("#txt_Select").val();
+        debugger
+        $("#Villageid").val();//获取当前选择项的值.
+        var options = $("#Villageid option:selected");//获取当前选择项.
+        var VillageID = options.val();//获取当前选择项的值.
+
+        debugger
+        $("#FloorSelectID").val();//获取当前选择项的值.
+        var options2 = $("#FloorSelectID option:selected");//获取当前选择项.
+        var FloorID = options2.val();//获取当前选择项的值.
+        //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+        table.reload('test', {
+            url: '/RoleInfo/GetRoleInfo',
+            page: {
+                curr: 1//从第一页开始
+            },
+            where: {
+                selectInfo: selectInfo,//设定异步数据接口的额外参数
+                VillageID: VillageID,
+                FloorID: FloorID,
+            }
+        });
+    };
+
+</script>
+

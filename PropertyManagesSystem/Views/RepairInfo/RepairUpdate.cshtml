@@ -1,0 +1,157 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">报修编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="RepairID" lay-verify="required" class="layui-input" value="@ViewBag.model.RepairID" readonly="readonly" style="color:red">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">业主姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="UserName" lay-verify="required" class="layui-input" value="@ViewBag.model.UserName" readonly="readonly" style="color:red">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">房屋编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="HousID" lay-verify="required" class="layui-input" value="@ViewBag.model.HousID" readonly="readonly" style="color:red">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">报修内容</label>
+            <div class="layui-input-block">
+                <textarea name="Rreason" class="layui-textarea" lay-verify="required" readonly="readonly" style="color:red">@ViewBag.model.Rreason</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">联系电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" lay-verify="required|phone" class="layui-input" value="@ViewBag.model.Phone" readonly="readonly" style="color:red">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">提交日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="RsubmitData" id="RsubmitData" lay-verify="required" class="layui-input" value="@ViewBag.RsubmitData" readonly="readonly" style="color:red">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">解决日期</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="RsolveData" name="RsolveData" placeholder="年-月-日" value="@ViewBag.RsolveData" readonly="readonly" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">操作员</label>
+            <div class="layui-input-block">
+                <input type="text" name="AdminName" lay-verify="required" class="layui-input" value="@ViewBag.userName" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">状态</label>
+            <div class="layui-input-block">
+                <select name="State" id="stateID">
+                    <option value=0 selected="selected">已处理</option>
+                    <option value=1>处理中</option>
+                    <option value=2>未处理</option>
+                    <option value=3>取消</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label ">备注</label>
+            <div class="layui-input-block">
+                <textarea  class="layui-textarea" name="Remarks" id="RemarksID" placeholder="请填写备注">@ViewBag.model.Remarks</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+  //使用jq给下拉框赋值
+        $('#stateID').val(@ViewBag.model.State)
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , $ = layui.$
+            var layedit = layui.layedit
+            var laydate = layui.laydate;
+            //常规用法
+            laydate.render({
+                elem: '#RsolveData'
+            });
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var RepairInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/RepairInfo/RepairInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        RepairInfoJson: RepairInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                             var index = layer.alert("修改成功", {
+                                title: '温馨提示'
+                            }, function () {
+
+                                // 关闭弹出层
+                                layer.close(index);
+
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                     parent.layer.close(iframeIndex);
+                                     window.parent.btn_search();//刷新父窗口表格
+                           })
+                        }
+                        else {
+                            alert("添加失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+          function checkDate() {
+
+             //获取文本框的值
+            var selectInfo1 = $("#RsolveData").val();
+            var selectInfo2 = $("#RsubmitData").val();
+            if (selectInfo1 != '' && selectInfo2 != '') {
+                if (selectInfo1 < selectInfo2) {
+                    layer.alert('解决时间不能小于提交时间！');
+                    return false;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

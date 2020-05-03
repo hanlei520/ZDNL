@@ -1,0 +1,111 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>AddIndex</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">楼栋编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="FloorID" lay-verify="required|isrepeat|maxlength" lay-reqtext="楼栋编号不能为空" placeholder="请输入楼栋编号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">楼栋名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="FloorName" lay-verify="required" lay-reqtext="楼栋名称不能为空" placeholder="请输入楼栋名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="Remarks" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认添加</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+                , layer = layui.layer
+                , $ = layui.$
+
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+                maxlength: function (value) {
+                    if (value.length > 16) {
+                        return '不能超过16个字符';
+                    }
+                }
+                //判断楼栋编号是否存在
+                , isrepeat: function (value) {
+                    ;
+                    var callbackdata;
+                    $.ajax({
+                        url: "/FloorInfo/CheckRepeat",
+                        type: "post",
+                        async: false,//同步-保证验证通过之后，才执行表单的提交
+                        data: {
+                            value: value
+                        },
+                        success: function (data) {
+                            callbackdata = data;
+
+                        }
+                    });
+                    if (callbackdata == "no") {
+                        return ("同一楼栋名的信息已存在，请添加其他楼栋信息！");
+                    }
+                }
+            });
+
+            
+             //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var FloorInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/FloorInfo/FloorInfoAdd',
+                    type: 'POST',
+                    data: {
+                        FloorInfoJson: FloorInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                            layer.alert("添加成功");
+                        }
+                        else {
+                            alert("添加失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

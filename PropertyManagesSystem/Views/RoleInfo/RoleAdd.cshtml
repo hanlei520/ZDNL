@@ -1,0 +1,112 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="RoleID" lay-verify="required|numer|isrepeat" placeholder="请输入角色ID" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="RoleName" lay-verify="required" placeholder="请输入角色名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="Description" lay-verify="required" placeholder="请输入角色描述" class="layui-input">
+            </div>
+        </div>
+       
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认添加</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+                , layer = layui.layer
+                , $ = layui.$
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+                numer: function (value) {
+
+                    var res = /^[0-9]\d*$/;
+                    if (!res.test(value)) {
+                        return '请输入正整数！';
+                    }
+                }
+                //判断角色ID是否存在
+                , isrepeat: function (value) {
+                    ;
+                    var callbackdata;
+                    $.ajax({
+                        url: "/RoleInfo/CheckRepeat",
+                        type: "post",
+                        async: false,//同步-保证验证通过之后，才执行表单的提交
+                        data: {
+                            value: value
+                        },
+                        success: function (data) {
+                            callbackdata = data;
+
+                        }
+                    });
+                    if (callbackdata == "no") {
+                        return ("同一角色ID的信息已存在，请添加其他角色ID信息！");
+                    }
+                }
+            });
+
+             //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var RoleInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/RoleInfo/RoleInfoAdd',
+                    type: 'POST',
+                    data: {
+                        RoleInfoJson: RoleInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                            layer.alert("添加成功");
+                        }
+                        else {
+                            alert("添加失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

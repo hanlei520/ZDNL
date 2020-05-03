@@ -1,0 +1,120 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Update</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">订单编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="PropertyID" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.PropertyID" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">房屋编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="HousID" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.HouseID" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">物业费/月</label>
+            <div class="layui-input-block">
+                <input type="text" name="PropertyCost" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.PropertyCost" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">缴费月份</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input"  name="Month"  readonly="readonly" value="@ViewBag.model.Month" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">录入员</label>
+            <div class="layui-input-block">
+                <input type="text" name="AdminID" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.AdminName" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="State" value="0" title="未缴费" checked="" id="stateRadio1">
+                <input type="radio" name="State" value="1" title="已缴费" id="stateRadio2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+              //动态设置单选框的选中
+    if (@ViewBag.model.State == 1) {
+        $("#stateRadio1").prop("checked", false);
+        $("#stateRadio2").prop("checked", true);
+    }
+
+    if (@ViewBag.model.State == 0) {
+        $("#stateRadio1").prop("checked", true);
+        $("#stateRadio2").prop("checked", false);
+            }
+
+
+        layui.use(['form'], function () {
+            var form = layui.form
+             layer = layui.layer,
+                $ = layui.$;
+
+
+             //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var PropertyInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/PropertyInfo/PropertyInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        PropertyInfoJson: PropertyInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                            var index = layer.alert("修改成功", {
+                                title: '温馨提示'
+                            }, function () {
+
+                                // 关闭弹出层
+                                layer.close(index);
+
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(iframeIndex);
+                                    window.parent.btn_search();//刷新父窗口表格
+                           })
+                        }
+                        else {
+                            alert("修改失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+ });
+    </script>
+</body>
+</html>
+

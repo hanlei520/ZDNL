@@ -1,0 +1,401 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>首页二</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    @Styles.Render("~/welcome1/css")
+    <style>
+
+        .layui-card {
+            border: 1px solid #f2f2f2;
+            border-radius: 5px;
+        }
+
+        .icon {
+            margin-right: 10px;
+            color: #1aa094;
+        }
+
+        .icon-cray {
+            color: #ffb800 !important;
+        }
+
+        .icon-blue {
+            color: #1e9fff !important;
+        }
+
+        .icon-tip {
+            color: #ff5722 !important;
+        }
+
+        .layuimini-qiuck-module {
+            text-align: center;
+            margin-top: 10px
+        }
+
+            .layuimini-qiuck-module a i {
+                display: inline-block;
+                width: 100%;
+                height: 60px;
+                line-height: 60px;
+                text-align: center;
+                border-radius: 2px;
+                font-size: 30px;
+                background-color: #F8F8F8;
+                color: #333;
+                transition: all .3s;
+                -webkit-transition: all .3s;
+            }
+
+            .layuimini-qiuck-module a cite {
+                position: relative;
+                top: 2px;
+                display: block;
+                color: #666;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                font-size: 14px;
+            }
+
+        .welcome-module {
+            width: 100%;
+            height: 210px;
+        }
+
+        .panel {
+            background-color: #fff;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            box-shadow: 0 1px 1px rgba(0,0,0,.05)
+        }
+
+        .panel-body {
+            padding: 10px
+        }
+
+        .panel-title {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 12px;
+            color: inherit
+        }
+
+        .label {
+            display: inline;
+            padding: .2em .6em .3em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+            margin-top: .3em;
+        }
+
+        .layui-red {
+            color: red
+        }
+
+        .main_btn > p {
+            height: 40px;
+        }
+
+        .layui-bg-number {
+            background-color: #F8F8F8;
+        }
+
+        .layuimini-notice:hover {
+            background: #f6f6f6;
+        }
+
+        .layuimini-notice {
+            padding: 7px 16px;
+            clear: both;
+            font-size: 12px !important;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .layuimini-notice-title, .layuimini-notice-label {
+            padding-right: 70px !important;
+            text-overflow: ellipsis !important;
+            overflow: hidden !important;
+            white-space: nowrap !important;
+        }
+
+        .layuimini-notice-title {
+            line-height: 28px;
+            font-size: 14px;
+        }
+
+        .layuimini-notice-extra {
+            position: absolute;
+            top: 50%;
+            margin-top: -8px;
+            right: 16px;
+            display: inline-block;
+            height: 16px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="layuimini-container">
+        <div class="layuimini-main">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md8">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
+                                <div class="layui-card-body">
+                                    <div class="welcome-module">
+                                        <div class="layui-row layui-col-space10">
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-blue">实时</span>
+                                                            <h5>房产统计</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">@ViewBag.Hous</h1>
+                                                            <small>当前分类总记录数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-cyan">实时</span>
+                                                            <h5>业主统计</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">@ViewBag.UserInfo</h1>
+                                                            <small>当前分类总记录数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-orange">实时</span>
+                                                            <h5>投诉统计</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">@ViewBag.ComplaList</h1>
+                                                            <small>当前分类总记录数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-green">实时</span>
+                                                            <h5>报修统计</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">@ViewBag.RepairList</h1>
+                                                            <small>当前分类总记录数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>快捷入口</div>
+                                <div class="layui-card-body">
+                                    <div class="welcome-module">
+                                        <div class="layui-row layui-col-space10 layuimini-qiuck">
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="HouseInfo/HouseIndex" data-title="房产管理" data-icon="fa fa-bank">
+                                                    <i class="fa fa-bank"></i>
+                                                    <cite>房产管理</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="VillageInfo/VillageIndex" data-title="我的小区" data-icon="fa fa-building-o">
+                                                    <i class="fa fa-building-o"></i>
+                                                    <cite>我的小区</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="FloorInfo/FloorIndex" data-title="楼栋信息" data-icon="fa fa-building">
+                                                    <i class="fa fa-building"></i>
+                                                    <cite>楼栋信息</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="UserInfo/UserIndex" data-title="业主管理" data-icon="fa fa-users">
+                                                    <i class="fa fa-users"></i>
+                                                    <cite>业主管理</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="ComplaInfo/ComplaIndex" data-title="投诉管理" data-icon="fa fa-comments-o">
+                                                    <i class="fa fa-comments-o"></i>
+                                                    <cite>投诉管理</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="RepairInfo/RepairIndex" data-title="报修管理" data-icon="fa fa-wrench">
+                                                    <i class="fa fa-wrench"></i>
+                                                    <cite>报修管理</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="CostInfo/CostIndex" data-title="水电费用" data-icon="fa fa-tint">
+                                                    <i class="fa fa-tint"></i>
+                                                    <cite>水电费用</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="PropertyInfo/PropertyIndex" data-title="物业费用" data-icon="fa fa-calendar">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <cite>物业费用</cite>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md4">
+                    <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
+                            <div class="layui-card-body layui-text">
+                                <div class="layuimini-notice">
+                                    <div class="layuimini-notice-title">及时报备的通知</div>
+                                    <div class="layuimini-notice-extra">2020-4-22 10:36:20</div>
+                                    <div class="layuimini-notice-content layui-hide">
+                                        尊敬的业主：<br>
+                                        您好，因疫情原因，业主您或您亲戚、朋友从外省或国外回来的，如湖北、武汉、黑龙江……请您及时联系物业或社区，请相互转告，相互监督，给你带来便，请您谅解，感谢您的配合！
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="layuimini-notice">
+                                    <div class="layuimini-notice-title">绿化修剪、治虫的公告</div>
+                                    <div class="layuimini-notice-extra">2020-4-22 10:48:07</div>
+                                    <div class="layuimini-notice-content layui-hide">
+                                        尊敬业主、租户<br>
+                                        您好，绿化维保单位本月26日（周日）对树木进行修剪，同时进行治虫，请业主们不要触摸树叶、花木，注意安全。谢谢配合。<br>
+                                    </div>
+                                </div>
+                                <div class="layuimini-notice">
+                                    <div class="layuimini-notice-title">有序停放车辆的通知</div>
+                                    <div class="layuimini-notice-extra">2020-04-20 23:06</div>
+                                    <div class="layuimini-notice-content layui-hide">
+                                        尊敬的业主：<br>
+                                        您好！为了您和他人的畅通出行，请勿将您的电动车、自行车停放在单元门口及过道内。请您将车辆停放至负一楼车库，临时访客的车辆请停放至负一楼车库或物业指定的临时停放点，感谢您的配合！<br>
+                                    </div>
+                                </div>
+                                <div class="layuimini-notice">
+                                    <div class="layuimini-notice-title">小区停水的通知</div>
+                                    <div class="layuimini-notice-extra">2020-4-7 17:15:09</div>
+                                    <div class="layuimini-notice-content layui-hide">
+                                        尊敬的小区业主:<br>
+
+                                        您好!接自来水公司通知，因润扬路施工改造，定于4月2日晚上10点至4月3日早上8点对本小区停水，请各位业主做好蓄水准备，请相互转告！特此通知！<br>
+                                    </div>
+                                </div>
+                                <div class="layuimini-notice">
+                                    <div class="layuimini-notice-title">配合疫情检查的通知</div>
+                                    <div class="layuimini-notice-extra">2020-3-20 15:44:47</div>
+                                    <div class="layuimini-notice-content layui-hide">
+                                        尊敬的小区业主：<br>
+                                        您好!现部分单位已经陆续复工了，各位业主请人员做工有事的，要求工人主动到小区南门登记测量体温，请主动扫健康码，服从管理规定，
+                                        特别是要装修人员请本地的工人，人数请控制在4人以下，感谢支持与配合，特此告知!
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="layuimini-notice">
+                                    <div class="layuimini-notice-title">疫情期间安全的通知</div>
+                                    <div class="layuimini-notice-extra">2020-3-18 15:06:15</div>
+                                    <div class="layuimini-notice-content layui-hide">
+                                        尊敬的各位业主：<br>
+                                        大家好！目前处于疫情的关键时刻，很多学生都在等学校复课，园区的很多孩子闲暇时喜欢骑平衡车，平衡车的速度比较快，存在很多安全隐患，
+                                        尤其是在小区内，人流量多车流量也多，事故风险比较高，目前也并没有平衡车的专用车道，加上平衡车的控制力并不是很好，有时候会碰撞到人或者是物体。
+                                        现在也发现有些孩子不同层度的摔倒和受伤，因此物业在此希望学生在园区尽量少骑平衡车，尽量有家长陪同，安全最重要。感谢大家的理解与配合！
+                                        <br>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/welcome1/js")
+    <script>
+        layui.use(['layer', 'miniTab', 'echarts'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                echarts = layui.echarts;
+
+            miniTab.listen();
+
+            /**
+             * 查看公告信息
+             **/
+            $('body').on('click', '.layuimini-notice', function () {
+                var title = $(this).children('.layuimini-notice-title').text(),
+                    noticeTime = $(this).children('.layuimini-notice-extra').text(),
+                    content = $(this).children('.layuimini-notice-content').html();
+                var html = '<div style="padding:15px 20px; text-align:justify; line-height: 22px;border-bottom:1px solid #e2e2e2;background-color: #2f4056;color: #ffffff">\n' +
+                    '<div style="text-align: center;margin-bottom: 20px;font-weight: bold;border-bottom:1px solid #718fb5;padding-bottom: 5px"><h4 class="text-danger">' + title + '</h4></div>\n' +
+                    '<div style="font-size: 12px">' + content + '</div>\n' +
+                    '</div>\n';
+                parent.layer.open({
+                    type: 1,
+                    title: '系统公告' + '<span style="float: right;right: 1px;font-size: 12px;color: #b1b3b9;margin-top: 1px">' + noticeTime + '</span>',
+                    area: '300px;',
+                    shade: 0.8,
+                    id: 'layuimini-notice',
+                    btn: [ '确定'],
+                    btnAlign: 'c',
+                    moveType: 1,
+                    content: html,
+                    success: function (layero) {
+                        var btn = layero.find('.layui-layer-btn');
+                    }
+                });
+            });
+
+        });</script>
+
+    <script>
+</script>
+</body>
+</html>

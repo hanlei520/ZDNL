@@ -1,0 +1,297 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdminIndex</title>
+    @Styles.Render("~/Admin/css")
+</head>
+<body>
+
+    <div class="layui-row layui-form">
+        <div class="layui-col-md2 " style="margin-top:20px; margin-left:20px;"><input type="text" id="txt_Select" placeholder="请输入用户名字" class="layui-input"></div>
+        <div class="layui-col-md1" style="margin-top:20px;"> <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button></div>
+    </div>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+
+    @Scripts.Render("~/Admin/js")
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-radius" lay-event="btn_add"><i class="layui-icon">&#xe608;</i>添加</button>
+            <button class="layui-btn layui-btn-radius" lay-event="btn_update"><i class="layui-icon">&#xe642;</i>修改</button>
+            <button class="layui-btn layui-btn-radius layui-btn-danger" lay-event="btn_delete"><i class="layui-icon"></i>删除</button>
+            <button class="layui-btn layui-btn-radius layui-btn-warm" lay-event="btn_repwd">重置密码</button>
+            <button class="layui-btn layui-btn-radius layui-btn-warm" lay-event="btn_addrole">分配权限</button>
+        </div>
+    </script>
+    <script type="text/html" id="sexTpl">
+        {{#  if(d.Sex == 0){ }}
+        <span style="color:#1E9FFF;"><i class="layui-icon">&#xe662;</i>男</span>
+        {{#  } else { }}
+        <span style="color: #F581B1;"><i class="layui-icon">&#xe661;</i>女</span>
+        {{#  } }}
+    </script>
+    <script type="text/html" id="checkboxTpl">
+        @*d.DelFlag == 0 ? 'checked' : ''  如果后台传来的DelFlag为0，按钮为选中状态*@
+        <input type="checkbox" name="lock" value="{{d.ID}}" title="开启用户" lay-filter="lockDemo" {{ d.DelFlag == 0 ? 'checked' : '' }}>
+    </script>
+    <script>
+        //使用layui的table模块
+        var table;
+
+        layui.use('table', function () {
+            //实例化layui的table模块
+            table = layui.table;
+
+            var form = layui.form;
+
+            //渲染表格
+            table.render({
+                elem: '#test'//把表格渲染在id为test的标签中
+                , url: '/AdminInfo/GetAdminInfo'//数据接口，即后台地址
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'ID', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'AdminID', title: '用户编号', width: 120, }
+                    , { field: 'Name', title: '用户姓名', width: 120, sort: true }
+                    , { field: 'Phone', title: '手机号', width: 180 }
+                    , { field: 'Sex', title: '性别', templet: '#sexTpl' }
+                    , { field: 'RoleName', title: '拥有的角色', sort: false }
+                    , { field: 'Email', title: '邮箱', width: 180, sort: true }
+                    , { field: 'DelFlag', title: '是否禁用', width: 180, sort: true, templet: '#checkboxTpl' }
+
+
+                ]]
+                , page: true//是否开启分页
+            });
+            //头工具栏事件
+            table.on('toolbar(test)', function (obj) {
+                ;
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'btn_add':
+                        //添加用户信息
+                        //iframe 窗--弹出添加窗体
+                       var index =  layer.open({
+                            type: 2,   //iframe
+                            title: '用户信息添加',
+                            shade: 0.6,  //遮罩
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['100%', '100%'],
+                            content: '/AdminInfo/AdminAdd',//页面地址
+                            cancel: function (index) {
+                                //关闭窗口
+                                layer.close(index);
+                                //重新加载表格
+                                btn_search();
+                            }
+                        });
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                        break;
+                    case 'btn_update':
+                        //修改用户信息
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        if (data.length == 1) {
+                            //转成json格式的字符串
+                            var strdata = JSON.stringify(data);
+                            //转成json对象
+                            var jsondata = JSON.parse(strdata);
+                            //获取id
+                            var AdminID = jsondata[0].AdminID;
+                            //iframe 窗--弹出修改窗体
+                            layer.open({
+                                type: 2,   //iframe
+                                title: '修改用户信息',
+                                shade: 0.6,  //遮罩
+                                maxmin: true,
+                                shadeClose: true,
+                                area: ['100%', '100%'],
+                                content: '/AdminInfo/AdminUpdate?AdminID=' + AdminID + '',//页面地址
+                            });
+                            $(window).on("resize", function () {
+                                layer.full(index);
+                            });
+                        } else {
+                            layer.alert("必须选中且只能选中一条数据！");
+                        }
+                        break;
+                    case 'btn_delete':
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        if (data.length <= 0) {
+                            layer.alert("必须选中一条数据！");
+                        }
+                        else {
+                            //定义数组对象
+                            var mycars = new Array()
+                            //转成json格式的字符串
+                            var strdata1 = JSON.stringify(data);
+                            //转成json对象
+                            var jsondata1 = JSON.parse(strdata1);
+                            //循环取选中ID
+                            for (var i = 0; i < data.length; i++) {
+                                //获取id
+                                mycars[i] = jsondata1[i].ID;
+                            }
+                            //执行删除-->调用删除方法
+                            if (confirm("确定删除吗？删除将无法恢复！")) {
+                                btn_Delete(mycars);
+                            }
+                        }
+                        break;
+                    case 'btn_repwd':
+
+                        //获取选中的信息
+                        
+                        var data = checkStatus.data;
+                        if (data.length <= 0) {
+                            layer.alert("必须选中一条数据！");
+                        }
+                        else {
+                            //定义数组对象
+                            var mycars = new Array()
+                            //转成json格式的字符串
+                            var strdata1 = JSON.stringify(data);
+                            //转成json对象
+                            var jsondata1 = JSON.parse(strdata1);
+                            //循环取选中ID
+                            for (var i = 0; i < data.length; i++) {
+                                //获取id
+                                mycars[i] = jsondata1[i].ID;
+                            }
+                            //执行重置-->调用重置
+                            if (confirm("确定重置吗？")) {
+                                btn_RePwd(mycars);
+                            }
+                        }
+                        break;
+                    case 'btn_addrole':
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        if (data.length == 1) {
+                            //转成json格式的字符串
+                            var strdata = JSON.stringify(data);
+                            //转成json对象
+                            var jsondata = JSON.parse(strdata);
+                            ;
+                            //获取id
+                            var AdminID = jsondata[0].AdminID;
+                            //iframe 窗--弹出修改窗体
+                            layer.open({
+                                type: 2,   //iframe
+                                title: '配置用户权限',
+                                shade: 0.6,  //遮罩
+                                maxmin: true,
+                                shadeClose: true,
+                                area: ['100%', '100%'],
+                                content: '/RoleInfo/ConfigIndex?AdminID=' + AdminID + '',//页面地址
+                            });
+                            $(window).on("resize", function () {
+                                layer.full(index);
+                            });
+                        } else {
+                            layer.alert("必须选中且只能选中一条数据！");
+                        }
+                        break;
+                };
+            });
+
+            //监听锁定工作
+            form.on('checkbox(lockDemo)', function (obj) {
+                ;
+                $.ajax({
+                    url: '/AdminInfo/ForbidUser',
+                    type: 'post',
+                    data: {
+                        id: this.value,
+                        flag: obj.elem.checked,
+                    },
+                    success: function (data) {
+                        layer.alert(data);
+                        //刷新表格
+                        btn_search();
+                    },
+
+
+
+
+                })
+            })
+        });
+
+        //删除方法
+        btn_Delete = function (ID) {
+            
+            $.ajax({
+                type: 'post',
+                url: '/AdminInfo/Delete',
+                data: {
+                    id: ID,
+                },
+                success: function (data) {
+
+                    if (data == "ok") {
+                        layer.alert("删除成功！");
+                        //重新加载表示
+                        btn_search();
+                    }
+                    else {
+                        layer.alert("删除失败！");
+                    }
+
+
+                }
+            });
+        };
+        //密码重置方法
+        btn_RePwd = function (ID) {
+            
+            $.ajax({
+                type: 'post',
+                url: '/AdminInfo/RePwd',
+                data: {
+                    id: ID,
+                },
+                success: function (data) {
+
+                    if (data == "ok") {
+                        layer.alert("重置成功！");
+                        //重新加载表示
+                        btn_search();
+                    }
+                    else {
+                        layer.alert("重置失败！");
+                    }
+                }
+            });
+        };
+        //查询
+        btn_search = function () {
+            //获取文本框的值
+            var selectInfo = $("#txt_Select").val();
+            //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+            table.reload('test', {
+                url: '/AdminInfo/GetAdminInfo',
+                page: {
+                    curr: 1//从第一页开始
+                },
+                where: {
+                    selectInfo: selectInfo,//设定异步数据接口的额外参数
+                }
+            });
+        };
+    </script>
+</body>
+</html>

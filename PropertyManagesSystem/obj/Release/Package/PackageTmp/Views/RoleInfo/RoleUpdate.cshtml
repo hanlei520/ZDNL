@@ -1,0 +1,93 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="RoleID" value="@ViewBag.model.RoleID" lay-verify="required" placeholder="请输入" class="layui-input" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="RoleName" value="@ViewBag.model.RoleName" lay-verify="required" placeholder="请输入角色名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="Description" value="@ViewBag.model.Description" lay-verify="required" placeholder="请输入角色描述" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+                , $ = layui.$
+                , layer = layui.layer
+             //监听提交
+            form.on('submit(saveBtn)', function (data) {
+                var RoleInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/RoleInfo/RoleInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        RoleInfoJson: RoleInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+
+                           var index = layer.alert("修改成功", {
+                                title: '温馨提示'
+                            }, function () {
+
+                                // 关闭弹出层
+                                layer.close(index);
+
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                   parent.layer.close(iframeIndex);
+                                   window.parent.btn_search();//刷新父窗口表格
+                           })
+
+                        }
+                        else {
+                            alert("修改失败，请重试！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>
+
+

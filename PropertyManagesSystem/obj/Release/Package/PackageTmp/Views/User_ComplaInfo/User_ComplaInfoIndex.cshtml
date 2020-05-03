@@ -1,0 +1,288 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>User_ComplaInfoIndex</title>
+    @Styles.Render("~/Compla/css")
+</head>
+<body>
+    <div class="layui-row layui-form">
+        <div class="layui-input-inline layui-col-md1  " style="margin-top:20px;margin-left:20px;">
+            <div class="layui-input-inline">
+                <input type="text" name="RsubmitData" id="date1" lay-verify="date" placeholder="开始日期" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-input-inline layui-col-md1  " style="margin-top:20px;margin-left:20px;">
+            <div class="layui-input-inline">
+                <input type="text" name="RsubmitData2" id="date2" lay-verify="date" placeholder="截止日期" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-col-md2 " style="margin-left:20px; margin-top:20px;width:150px;">
+            <select name="modules" lay-verify="required" lay-search="" id="CompType">
+                <option value="">请选择类型</option>
+                <option value="建议">建议</option>
+                <option value="投诉">投诉</option>
+            </select>
+        </div>
+        <div class="layui-col-md2 " style="margin-left:20px; margin-top:20px;width:150px;">
+            <select name="modules" lay-verify="required" lay-search="" id="State">
+                <option value="">请选择状态</option>
+                <option value="0">已处理</option>
+                <option value="1">处理中</option>
+                <option value="2">未处理</option>
+                <option value="3">取消</option>
+            </select>
+        </div>
+
+        <div class="layui-col-md1" style="margin-top:20px;">
+            <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button>
+        </div>
+    </div>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+    @Scripts.Render("~/Compla/js")
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-radius" lay-event="btn_Add"><i class="layui-icon">&#xe608;</i>建议/投诉</button>
+            <button class="layui-btn layui-btn-radius" lay-event="btn_Cancel"><i class="layui-icon">&#x1006;</i>取消建议投诉</button>
+            <button class="layui-btn layui-btn-radius" lay-event="btn_Update"><i class="layui-icon">&#xe642;</i>修改建议投诉</button>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="stateTpl">
+        {{# if (d.State === 0) { }}
+        <span style="color:#009688;">已处理</span>
+        {{# } else if(d.State === 1) { }}
+        <span style="color:#1E9FFF;">处理中</span>
+        {{# } else if(d.State === 2) { }}
+        <span style="color:#FF5722;">未处理</span>
+        {{# } else { }}
+        <span style="color:#2F4056;">取消</span>
+        {{# } }}
+    </script>
+    <script type="text/html" id="TypeTpl">
+        {{# if (d.CompType === '投诉') { }}
+        <span style="color:red;">投诉</span>
+        {{# } else { }}
+        <span style="color:blue;">建议</span>
+        {{# } }}
+    </script>
+
+
+    <script>
+
+        //使用layui的table模块
+        //使用layui的table模块
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form;
+            var layedit = layui.layedit;
+            var laydate = layui.laydate;
+            //日期
+            laydate.render({
+                elem: '#date1'
+            });
+            laydate.render({
+                elem: '#date2'
+            });
+            form.render();
+        });
+        var table;
+
+        layui.use('table', function () {
+            //实例化layui的table模块
+            table = layui.table;
+
+            //渲染表格
+            table.render({
+                elem: '#test'//把表格渲染在id为test的标签中
+                , url: '/User_ComplaInfo/UserGetComplaInfo'//数据接口，即后台地址
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+                , title: '我的投诉建议'
+
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'ID', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'ComplaID', title: '投诉编号', sort: true }
+                    , { field: 'CompType', title: '投诉类型', templet: '#TypeTpl' }
+                    , { field: 'HousID', title: '房屋编号', sort: true }
+                    , { field: 'UserName', title: '业主姓名', sort: true }
+                    , { field: 'Phone', title: '投诉电话' }
+                    , { field: 'Contents', title: '投诉内容' }
+                    , { field: 'RsubmitData', title: '提交日期', sort: true }
+                    , { field: 'RsolveData', title: '解决日期', sort: true }
+                    , { field: 'State', title: '状态', templet: '#stateTpl' }
+                    , { field: 'AdminName', title: '操作员' }
+                    , { field: 'Remarks', title: '备注' }
+                ]]
+                , page: true//是否开启分页
+            });
+
+            //头工具栏事件
+            table.on('toolbar(test)', function (obj) {
+
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'btn_Add':
+                        //添加用户信息
+                        //iframe 窗--弹出添加窗体
+                        layer.open({
+                            type: 2,   //iframe
+                            title: '投诉信息添加',
+                            shade: 0.6,  //遮罩
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['100%', '100%'],
+                            content: '/User_ComplaInfo/User_ComplaAdd',//页面地址
+                            cancel: function (index) {
+                                //关闭窗口
+                                layer.close(index);
+                                //重新加载表格
+                                btn_search();
+                            }
+                        });
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                        break;
+                    case 'btn_Update':
+                        //获取选中的个数
+                        if (checkStatus.data.length == 1) {
+                            //获取选中的信息
+                            var data = checkStatus.data;
+                            //转成json格式的字符串
+                            var strdata = JSON.stringify(data);
+                            //转成json格式
+                            var jsondata = JSON.parse(strdata);
+                            //调用更新的方法
+                            ;
+                            var ComplaID = jsondata[0].ComplaID
+                            var State = jsondata[0].State
+                            if (State == 0) {
+                                layer.alert("该订单已处理，无法修改");
+                                return;
+                            }
+                            if (State == 1) {
+                                layer.alert("该订单处理中，无法修改");
+                                return;
+                            }
+                            if (State == 3) {
+                                layer.alert("该订单已取消，无法修改");
+                                return;
+                            }
+
+                            
+                            //iframe窗--弹出添加窗体
+                            layer.open({
+                                type: 2,//iframe
+                                title: '修改投诉建议信息',
+                                shade: 0.6,
+                                maxmin: true,
+                                shadeClose: true,
+                                area: ['100%', '100%'],
+                                content: '/User_ComplaInfo/User_ComplaUpdate?ComplaID=' + ComplaID + '',//页面地址
+                            });
+                            $(window).on("resize", function () {
+                                layer.full(index);
+                            });
+                        } else {
+                            layer.alert("必须选中且只能选中一条信息！");
+                        }
+                        break;
+                        ;
+                    case 'btn_Cancel':
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        if (data.length == 1) {
+                            //转成json格式的字符串
+                            var strdata = JSON.stringify(data);
+                            //转成json对象
+                            var jsondata = JSON.parse(strdata);
+                            var State = jsondata[0].State
+                            if (State == 3) {
+                                layer.alert("该订单已取消！");
+                                return;
+                            }
+                            //获取id
+                            var id = jsondata[0].ID;
+                            //执行取消-->调用取消方法
+                            if (confirm("确定取消吗？")) {
+                                btn_Cancel(id);
+                            }
+                        }
+                        else {
+                            layer.alert("必须选中且只能选中一条数据！");
+                        }
+                        break;
+                };
+            });
+        });
+
+        //查询
+        btn_search = function () {
+            //获取文本框的值
+            
+            var RsubmitDate = $("#date1").val();
+            var EndDate = $("#date2").val();
+            if (RsubmitDate == "" && EndDate != "") {
+                layer.alert('请选择开始时间！');
+                return false;
+            }
+            if (EndDate == "" && RsubmitDate != "") {
+                layer.alert('请选择结束时间！');
+                return false;
+            }
+            if (RsubmitDate != '' && EndDate != '') {
+                if (RsubmitDate > EndDate) {
+                    layer.alert('结束时间不能小于开始时间！');
+                    return false;
+                }
+            }
+            var State = $("#State").val();
+            var CompType = $("#CompType").val();
+            //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+            table.reload('test', {
+                url: '/User_ComplaInfo/UserGetComplaInfo',
+                page: {
+                    curr: 1//从第一页开始
+                },
+                where: {
+                    RsubmitDate: RsubmitDate,
+                    EndDate: EndDate,
+                    CompType: CompType,
+                    State: State,//设定异步数据接口的额外参数
+                }
+            });
+        };
+        //取消方法
+        btn_Cancel = function (ID) {
+            
+            $.ajax({
+                type: 'post',
+                url: '/User_ComplaInfo/Cancel',
+                data: {
+                    id: ID,
+                },
+                success: function (data) {
+
+                    if (data == "ok") {
+                        layer.alert("取消成功！");
+                        //重新加载表示
+                        btn_search();
+                    }
+                    else {
+                        layer.alert("取消失败！");
+                    }
+                }
+            });
+        };
+    </script>
+
+</body>
+</html>

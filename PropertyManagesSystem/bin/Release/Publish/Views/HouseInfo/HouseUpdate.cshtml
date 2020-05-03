@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddIndex</title>
+    <script src="~/Content/Home/layui/layui.js"></script>
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" />
+    @*jq资源文件，其实layui已经集成*@
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <div class="layui-col-md8">
+        <form class="layui-form layui-form-pane" lay-filter="form_add" action="/HouseInfo/Update" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">小区</label>
+                <div class="layui-input-inline ">
+                    <select name="VillageID" id="Villageid">
+                        @foreach (var item in @ViewBag.Village)
+                        {
+                            <option value="@item.VillageID">@item.VillageName</option>
+                        }
+                    </select>
+                </div>
+                <label class="layui-form-label">楼栋编号</label>
+                <div class="layui-input-inline ">
+                    <select name="FloorID" id="Floorid">
+                        @foreach (var item in @ViewBag.FloorInfo)
+                        {
+                            <option value="@item.FloorID">@item.FloorName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="HousID" value="@ViewBag.HouseInfo.HousID" readonly="readonly" lay-verify="required" placeholder="请输入" class="layui-input" style="color:red;">
+                </div>
+                <label class="layui-form-label">户型</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="HouseType" value="@ViewBag.HouseInfo.HouseType" lay-verify="required" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋面积</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="HouseArea" value="@ViewBag.HouseInfo.HouseArea" lay-verify="required|numer" placeholder="请输入" class="layui-input">
+                </div>
+                <label class="layui-form-label">物业费</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="PropertyCost" value="@ViewBag.HouseInfo.PropertyCost" lay-verify="required|numer" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+
+                <label class="layui-form-label">用途</label>
+                <div class="layui-input-inline ">
+                    <select name="Purpose" id="Purpose">
+                        <option value="">请选择</option>
+                        <option value="自住">自住</option>
+                        <option value="出租">出租</option>
+                    </select>
+                </div>
+
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline ">
+                    <select name="State" id="State">
+                        <option value="False" disabled="">已售</option>
+                        <option value="True" disabled="">未售</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align:center">
+                <button class="layui-btn" lay-submit="" lay-filter="btn_add"><i class="layui-icon layui-icon-ok"></i> 确认修改</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        //使用jq给下拉框赋值
+        $('#Villageid').val(@ViewBag.HouseInfo.VillageID);
+        $('#Floorid').val('@ViewBag.HouseInfo.FloorID');
+        $('#Userid').val('@ViewBag.HouseInfo.UserID');
+        debugger
+        $('#Purpose').val('@ViewBag.HouseInfo.Purpose');
+        debugger
+        $('#State').val('@ViewBag.HouseInfo.State');
+
+        debugger
+        debugger
+            @*$("#Floorid option[text='@ViewBag.HouseInfo.FloorID']").attr("selected", true);*@
+
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+
+                numer: function (value) {
+                    debugger
+                    var res = /^\d+(\.\d+)?$/;
+                    if (!res.test(value)) {
+                        return '请输入大于零的数字！';
+                    }
+                },
+            });
+        });
+       
+
+    </script>
+</body>
+</html>

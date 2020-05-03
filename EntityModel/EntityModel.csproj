@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4DD2FF2A-D004-4F7A-9DDA-0461BBDEAC3B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EntityModel</RootNamespace>
+    <AssemblyName>EntityModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminInfoDTO\AdminInfoInputDTO.cs" />
+    <Compile Include="AdminInfoDTO\AdminOutputDTO.cs" />
+    <Compile Include="ComplaInfoDTO\ComplaInfoInputDTO.cs" />
+    <Compile Include="ComplaInfoDTO\ComplaInfoOutputDTO.cs" />
+    <Compile Include="ComplaInfoDTO\ComplaInfoUpdateInputDTO.cs" />
+    <Compile Include="ComplaInfoOutput.cs" />
+    <Compile Include="CostInfoDTO\CostInfoInputDTO.cs" />
+    <Compile Include="CostInfoDTO\CostInfoOutputDTO.cs" />
+    <Compile Include="CostInfoDTO\CostInfoUpdateInputDTO.cs" />
+    <Compile Include="FloorInfoDTO\FloorInfoInputDTO.cs" />
+    <Compile Include="HouseInfoDTO\HouseInfoInputDTO.cs" />
+    <Compile Include="HouseInfoDTO\HouseInfoOutputDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyInfoDTO\PropertyInfoInputDTO.cs" />
+    <Compile Include="PropertyInfoDTO\PropertyInfoOutputDTO.cs" />
+    <Compile Include="PropertyInfoDTO\PropertyInfoUpdateInputDTO.cs" />
+    <Compile Include="PropertyInfoOutput.cs" />
+    <Compile Include="RepairInfoDTO\RepairInfoInputDTO.cs" />
+    <Compile Include="RepairInfoDTO\RepairInfoOutputDTO.cs" />
+    <Compile Include="RepairInfoDTO\RepairInfoUpdateInputDTO.cs" />
+    <Compile Include="RepairInfoOutput.cs" />
+    <Compile Include="RoleInfoDTO\RoleInfoInputDTO.cs" />
+    <Compile Include="RoleInfoOutpt.cs" />
+    <Compile Include="UserInfoDTO\UserInfoInputDTO.cs" />
+    <Compile Include="VillageInfoDTO\VillageInfoInputDTO.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

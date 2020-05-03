@@ -1,0 +1,93 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">小区编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="VillageID"  class="layui-input" value="@ViewBag.model.VillageID" readonly="readonly" style="color:red">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">小区名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="VillageName" lay-verify="required" placeholder="请输入小区名称" class="layui-input" value="@ViewBag.model.VillageName">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/table/js")
+    <script>
+
+        //使用jq给下拉框赋值
+        @*$('#sexid').val(@ViewBag.model.Sex);*@
+
+
+
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+                , layer = layui.layer
+                , $ = layui.$
+                                       //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var VillageInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/VillageInfo/VillageInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        VillageInfoJson: VillageInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+
+                           var index = layer.alert("修改成功", {
+                                title: '温馨提示'
+                            }, function () {
+
+                                // 关闭弹出层
+                                layer.close(index);
+
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                   parent.layer.close(iframeIndex);
+                                   window.parent.btn_search();//刷新父窗口表格
+                           })
+                        }
+                        else {
+                            layer.alert("添加失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+
+        });
+    </script>
+</body>
+</html>

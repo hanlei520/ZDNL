@@ -1,0 +1,93 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    @Styles.Render("~/RepairInfo/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">报修编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="RepairID" lay-verify="required" class="layui-input" value="@ViewBag.model.RepairID" style="color:red;" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">联系电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" lay-verify="required|phone" class="layui-input" placeholder="请输入联系电话" value="@ViewBag.model.Phone">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">报修内容</label>
+            <div class="layui-input-block">
+                <textarea name="Rreason" class="layui-textarea" lay-verify="required" placeholder="请输入投诉或建议内容">@ViewBag.model.Rreason</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label ">备注</label>
+            <div class="layui-input-block">
+                <textarea name="Remarks" class="layui-textarea" placeholder="请填写备注">@ViewBag.model.Remarks</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">提交</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/RepairInfo/js")
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+
+             //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var User_RepairInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/User_RepairInfo/User_RepairInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        User_RepairInfoJson: User_RepairInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                           var index = layer.alert("提交成功", {
+                                title: '温馨提示'
+                            }, function () {
+                                // 关闭弹出层
+                                layer.close(index);
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                   parent.layer.close(iframeIndex);
+                                   
+                                   window.parent.btn_search();//刷新父窗口表格
+                           })
+                        }
+                        else {
+                            layer.alert("提交失败，请重试！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>
+

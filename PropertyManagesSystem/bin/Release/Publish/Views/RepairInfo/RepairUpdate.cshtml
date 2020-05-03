@@ -1,0 +1,99 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+    <script src="~/Content/Home/layui/layui.js"></script>
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" media="all" />
+</head>
+<body>
+    <div class="layui-col-md8">
+        <form class="layui-form layui-form-pane" lay-filter="form_add" action="/RepairInfo/Update" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">报修编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="RepairID" lay-verify="required" class="layui-input" value="@ViewBag.model.RepairID" readonly="readonly" style="color:red">
+                </div>
+                <label class="layui-form-label">业主姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="UserName" lay-verify="required" class="layui-input" value="@ViewBag.model.UserName" readonly="readonly"style="color:red">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="HousID" lay-verify="required" class="layui-input" value="@ViewBag.model.HousID" readonly="readonly"style="color:red">
+                </div>
+                <label class="layui-form-label">报修内容</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="Rreason" lay-verify="required" class="layui-input" value="@ViewBag.model.Rreason" readonly="readonly"style="color:red">
+                </div>
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="Phone" lay-verify="required|phone" class="layui-input" value="@ViewBag.model.Phone" readonly="readonly"style="color:red">
+                </div>
+                <label class="layui-form-label">提交日期</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="RsubmitData" id="RsubmitData" lay-verify="required" class="layui-input" value="@ViewBag.RsubmitData" readonly="readonly"style="color:red" >
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">解决日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="RsolveData" name="RsolveData" placeholder="年-月-日" value="@ViewBag.RsolveData" readonly="readonly" lay-verify="required">
+                    </div>
+                </div>
+                <label class="layui-form-label">操作员</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="AdminName" lay-verify="required" class="layui-input" value="@ViewBag.userName" readonly="readonly" style="color:red;">
+                </div>
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <select name="State" id="stateID">
+                        <option value=0 selected="selected">已处理</option>
+                        <option value=1>处理中</option>
+                        <option value=2>未处理</option>
+                        <option value=3>取消</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">备注</label> @*修改备注字段长度、长度不够*@
+                <div class="layui-input-inline ">
+                    <textarea class="layui-input" name="Remarks" id="RemarksID" placeholder="请填写备注" >@ViewBag.model.Remarks</textarea>
+                    @*<input type="text" name="Remarks" class="layui-input" value="@ViewBag.model.Remarks">*@
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="text-align:center">
+                <button class="layui-btn" lay-submit="" lay-filter="btn_update" onclick="return checkDate()"><i class="layui-icon layui-icon-ok"></i> 确认修改</button>
+            </div>
+        </form>
+    </div>
+    <script>
+  //使用jq给下拉框赋值
+        $('#stateID').val(@ViewBag.model.State)
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+            var layedit = layui.layedit
+              var laydate = layui.laydate;
+  //常规用法
+  laydate.render({
+      elem: '#RsolveData'
+  });
+        });
+          function checkDate() {
+            debugger
+             //获取文本框的值
+            var selectInfo1 = $("#RsolveData").val();
+            var selectInfo2 = $("#RsubmitData").val();
+            if (selectInfo1 != '' && selectInfo2 != '') {
+                if (selectInfo1 < selectInfo2) {
+                    layer.alert('解决时间不能小于提交时间！');
+                    return false;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

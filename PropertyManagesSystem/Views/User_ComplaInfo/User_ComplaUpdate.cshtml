@@ -1,0 +1,103 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="ComplaID" value="@ViewBag.model.ComplaID" lay-verify="required" class="layui-input" style="color:red;" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">类型</label>
+            <div class="layui-input-block">
+                <select name="CompType" id="CompTypeID">
+                    <option value=建议 selected="selected">建议</option>
+                    <option value=投诉>投诉</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">联系电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" lay-verify="required|phone" lay-reqtext="手机号码不能为空" placeholder="请输入手机号码" value="@ViewBag.model.Phone" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">内容</label>
+            <div class="layui-input-block">
+                <textarea name="Contents" id="ContentsID" class="layui-textarea" lay-verify="required" placeholder="请输入投诉或建议内容">@ViewBag.model.Contents</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label ">备注</label>
+            <div class="layui-input-block">
+                <textarea name="Remarks" id="RemarksID" placeholder="请填写备注" class="layui-textarea">@ViewBag.model.Remarks</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">提交</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+<script>
+        $('#CompTypeID').val('@ViewBag.model.CompType');
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var User_ComplaInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/User_ComplaInfo/User_ComplaInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        User_ComplaInfoJson: User_ComplaInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                           var index = layer.alert("提交成功", {
+                                title: '温馨提示'
+                            }, function () {
+
+                                // 关闭弹出层
+                                layer.close(index);
+
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                   parent.layer.close(iframeIndex);
+                                   window.parent.btn_search();//刷新父窗口表格
+                           })
+                        }
+                        else {
+                            layer.alert("提交失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+</script>
+</body>
+</html>

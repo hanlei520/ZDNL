@@ -1,0 +1,114 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>User_PropertyIndex</title>
+    @Styles.Render("~/PropertyInfo/css")
+</head>
+<body>
+    <div class="layui-row layui-form">
+        <div class="layui-input-inline layui-col-md1  " style="margin-top:20px;margin-left:20px;">
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="MonthID" name="Month" placeholder="请选择月份" readonly="readonly" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-input-inline layui-col-md2  " style="margin-top:20px;margin-left:20px;">
+            <select name="modules" lay-verify="required" lay-search="" id="StateID">
+                <option value="">请选择</option>
+                <option value="0">未缴费</option>
+                <option value="1">已缴费</option>
+
+            </select>
+        </div>
+        <div class="layui-col-md1" style="margin-top:20px;">
+            <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button>
+        </div>
+    </div>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+    @Scripts.Render("~/PropertyInfo/js")
+    <script type="text/html" id="stateTpl">
+        {{# if (d.State === 0) { }}
+        <span style="color: #FF5722;">未缴费</span>
+        {{# } else if(d.State === 1) { }}
+        <span style="color: #5FB878;">已缴费</span>
+
+        {{# } }}
+    </script>
+
+
+
+    <script>
+
+        //使用layui的table模块
+        //使用layui的table模块
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form;
+            var layedit = layui.layedit;
+            var laydate = layui.laydate;
+            //年月选择器
+            laydate.render({
+                elem: '#MonthID'
+                , type: 'month'
+                , trigger: 'click'
+            });
+            form.render();
+        });
+        var table;
+
+        layui.use('table', function () {
+            //实例化layui的table模块
+            table = layui.table;
+
+            //渲染表格
+            table.render({
+                elem: '#test'//把表格渲染在id为test的标签中
+                , url: '/User_PropertyInfo/GetPropertyInfo'//数据接口，即后台地址
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+                , title: '物业费缴费信息'
+
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'ID', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'PropertyID', title: '订单编号', sort: true }
+                    , { field: 'HouseID', title: '房屋编号', sort: true }
+                    , { field: 'UserName', title: '业主姓名', sort: true }
+                    , { field: 'PropertyCost', title: '物业费' }
+                    , { field: 'Month', title: '缴费月份', sort: true }
+                    , { field: 'State', title: '状态', templet: '#stateTpl' }
+                    , { field: 'AdminName', title: '录入员' }
+
+                ]]
+                , page: true//是否开启分页
+            });
+        });
+        ;
+        //查询
+        btn_search = function () {
+            //获取文本框的值
+            var State = $("#StateID").val();
+            var MonthID = $("#MonthID").val();
+            //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+            table.reload('test', {
+                url: '/User_PropertyInfo/GetPropertyInfo',
+                page: {
+                    curr: 1//从第一页开始
+                },
+                where: {
+                    //HouseID: HouseID,
+                    MonthID: MonthID,
+                    State: State,//设定异步数据接口的额外参数
+                }
+            });
+        };
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0064)http://www.17sucai.com/preview/137615/2015-01-15/demo/index.html -->
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>登录</TITLE>
+    <script src="~/Content/Login/js/jquery-1.9.1.min.js"></script>
+    <STYLE>
+        body {
+            background: #ebebeb;
+            font-family: "Helvetica Neue","Hiragino Sans GB","Microsoft YaHei","\9ED1\4F53",Arial,sans-serif;
+            color: #222;
+            font-size: 12px;
+        }
+
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .top_div {
+            background: #008ead;
+            width: 100%;
+            height: 400px;
+        }
+
+        .ipt {
+            border: 1px solid #d3d3d3;
+            padding: 10px 10px;
+            width: 290px;
+            border-radius: 4px;
+            padding-left: 35px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+        }
+
+        .input-val {
+            margin-top: 10px;
+            border: 1px solid #d3d3d3;
+            padding: 10px 10px;
+            width: 190px;
+            border-radius: 4px;
+            padding-left: 35px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+        }
+
+        .ipt:focus {
+            border-color: #66afe9;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+        }
+
+        .u_logo {
+            background: url("/Content/Login/images/username.png") no-repeat;
+            padding: 10px 10px;
+            position: absolute;
+            top: 43px;
+            left: 40px;
+        }
+
+        .p_logo {
+            background: url("/Content/Login/images/password.png") no-repeat;
+            padding: 10px 10px;
+            position: absolute;
+            top: 12px;
+            left: 40px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .tou {
+            background: url("/Content/Login/images/tou.png") no-repeat;
+            width: 97px;
+            height: 92px;
+            position: absolute;
+            top: -87px;
+            left: 140px;
+        }
+
+        .left_hand {
+            background: url("/Content/Login/images/left_hand.png") no-repeat;
+            width: 32px;
+            height: 37px;
+            position: absolute;
+            top: -38px;
+            left: 150px;
+        }
+
+        .right_hand {
+            background: url("/Content/Login/images/right_hand.png") no-repeat;
+            width: 32px;
+            height: 37px;
+            position: absolute;
+            top: -38px;
+            right: -64px;
+        }
+
+        .initial_left_hand {
+            background: url("/Content/Login/images/hand.png") no-repeat;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            top: -12px;
+            left: 100px;
+        }
+
+        .initial_right_hand {
+            background: url("/Content/Login/images/hand.png") no-repeat;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            top: -12px;
+            right: -112px;
+        }
+
+        .left_handing {
+            background: url("/Content/Login/images/left-handing.png") no-repeat;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            top: -24px;
+            left: 139px;
+        }
+
+        .right_handinging {
+            background: url("/Content/Login/images/right_handing.png") no-repeat;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            top: -21px;
+            left: 210px;
+        }
+
+        .btn {
+            background: rgb(0, 142, 173);
+            padding: 7px 10px;
+            border-radius: 4px;
+            border: 1px solid rgb(26, 117, 152);
+            border-image: none;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn2 {
+            background: rgb(0, 142, 173);
+            padding: 7px 10px;
+            border-radius: 4px;
+            border: 1px solid rgb(26, 117, 152);
+            border-image: none;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #canvas {
+            float: right;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </STYLE>
+
+    <SCRIPT type="text/javascript">
+        $(function () {
+            //得到焦点
+            $("#password").focus(function () {
+                $("#left_hand").animate({
+                    left: "150",
+                    top: " -38"
+                }, {
+                        step: function () {
+                            if (parseInt($("#left_hand").css("left")) > 140) {
+                                $("#left_hand").attr("class", "left_hand");
+                            }
+                        }
+                    }, 2000);
+                $("#right_hand").animate({
+                    right: "-64",
+                    top: "-38px"
+                }, {
+                        step: function () {
+                            if (parseInt($("#right_hand").css("right")) > -70) {
+                                $("#right_hand").attr("class", "right_hand");
+                            }
+                        }
+                    }, 2000);
+            });
+            //失去焦点
+            $("#password").blur(function () {
+                $("#left_hand").attr("class", "initial_left_hand");
+                $("#left_hand").attr("style", "left:100px;top:-12px;");
+                $("#right_hand").attr("class", "initial_right_hand");
+                $("#right_hand").attr("style", "right:-112px;top:-12px");
+            });
+        });
+    </SCRIPT>
+
+    <META name="GENERATOR" content="MSHTML 11.00.9600.17496">
+</HEAD>
+<BODY>
+    <DIV class="top_div"></DIV>
+    <DIV style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231); border-image: none; width: 400px; height: 240px; text-align: center;">
+        <DIV style="width: 165px; height: 96px; position: absolute;">
+            <DIV class="tou"></DIV>
+            <DIV class="initial_left_hand" id="left_hand"></DIV>
+            <DIV class="initial_right_hand" id="right_hand"></DIV>
+        </DIV>
+
+        <P style="padding: 30px 0px 10px; position: relative;">
+            <SPAN class="u_logo"></SPAN>
+            <INPUT class="ipt" id="UserName" type="text" placeholder="请输入账号" value="">
+        </P>
+        <P style="position: relative;">
+            <SPAN class="p_logo"></SPAN>
+            <INPUT class="ipt" id="password" type="password" placeholder="请输入密码" value="">
+        </P>
+        <P style="position: relative;">
+            <input type="text" value="" placeholder="请输入验证码（不区分大小写）" class="input-val">
+            <canvas id="canvas" width="100" height="43" style="margin-top:10px;"></canvas>
+        </P>
+        <DIV style="height: 50px; line-height: 50px; margin-top: 15px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
+            <P style="margin: 0px 35px 20px 45px;">
+                <SPAN style="float: left;">
+                    <A style="color: rgb(204, 204, 204);"
+                       href="#">忘记密码?</A>
+                </SPAN>
+                <SPAN style="float: right;">
+                    <button type="button" id="UserLogin" class="btn">业主登录</button>
+                    <button type="button" id="AdminLogin" class="btn2">管理员登录</button>
+                </SPAN>
+            </P>
+        </DIV>
+    </DIV>
+</BODY>
+</HTML>
+
+<script type="text/javascript">
+
+
+    $(function () {
+        var show_num = [];
+        draw(show_num);
+
+        $("#canvas").on('click', function () {
+            draw(show_num);
+        })
+                $(".btn").on('click', function () {
+            var val = $(".input-val").val().toLowerCase();
+            var num = show_num.join("");
+            if (val == '') {
+                alert('请输入验证码！');
+                return;
+            } else if (val == num) {
+                UserLogin();
+                //AdminLogin();
+                //alert('提交成功！');
+                $(".input-val").val('');
+                draw(show_num);
+
+            } else {
+                alert('验证码错误！请重新输入！');
+                $(".input-val").val('');
+                draw(show_num);
+                return;
+            }
+        })
+
+        $(".btn2").on('click', function () {
+            var val = $(".input-val").val().toLowerCase();
+            var num = show_num.join("");
+            if (val == '') {
+                alert('请输入验证码！');
+                return;
+            } else if (val == num) {
+                //UserLogin();
+                AdminLogin();
+                //alert('提交成功！');
+                $(".input-val").val('');
+                draw(show_num);
+
+            } else {
+                alert('验证码错误！请重新输入！');
+                $(".input-val").val('');
+                draw(show_num);
+                return;
+            }
+        })
+    })
+
+    function UserLogin() {
+         var userName = $("#UserName").val();
+            var userPassWord = $("#password").val();
+            if(userName=="" || userPassWord=="")
+            {
+                alert("账号或密码不能为空！");
+                return;
+            }
+          $.ajax({
+                url: '/Login/UserLogin',
+                type: 'POST',
+                data: {
+                    userName: userName,
+                    userPassWord: userPassWord
+                },
+
+                success: function (data) {
+                    if (data=="ok") {
+                       window.location.href='@Url.Action("Index","Main")'
+                    }
+                    else {
+                        alert("登陆失败，请检查账号或密码是否正确！");
+                    }
+                }
+            })
+    }
+
+    function AdminLogin() {
+         var userName = $("#UserName").val();
+            var userPassWord = $("#password").val();
+            if(userName=="" || userPassWord=="")
+            {
+                alert("账号或密码不能为空！");
+                return;
+            }
+          $.ajax({
+                url: '/Login/AdminLogin',
+                type: 'POST',
+                data: {
+                    userName: userName,
+                    userPassWord: userPassWord
+                },
+
+                success: function (data) {
+                    if (data=="ok") {
+                       window.location.href='@Url.Action("Index","Home")'
+                    }
+                    else {
+                        alert("登陆失败，请检查账号或密码是否正确！");
+                    }
+                }
+            })
+    }
+
+
+     function draw(show_num) {
+        var canvas_width = $('#canvas').width();
+        var canvas_height = $('#canvas').height();
+        var canvas = document.getElementById("canvas");//获取到canvas的对象，演员
+        var context = canvas.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
+        canvas.width = canvas_width;
+        canvas.height = canvas_height;
+        var sCode = "A,B,C,E,F,G,H,J,K,L,M,N,P,Q,R,S,T,W,X,Y,Z,1,2,3,4,5,6,7,8,9,0";
+        var aCode = sCode.split(",");
+        var aLength = aCode.length;//获取到数组的长度
+
+        for (var i = 0; i <= 3; i++) {
+            var j = Math.floor(Math.random() * aLength);//获取到随机的索引值
+            var deg = Math.random() * 30 * Math.PI / 180;//产生0~30之间的随机弧度
+            var txt = aCode[j];//得到随机的一个内容
+            show_num[i] = txt.toLowerCase();
+            var x = 10 + i * 20;//文字在canvas上的x坐标
+            var y = 20 + Math.random() * 8;//文字在canvas上的y坐标
+            context.font = "bold 23px 微软雅黑";
+
+            context.translate(x, y);
+            context.rotate(deg);
+
+            context.fillStyle = randomColor();
+            context.fillText(txt, 0, 0);
+
+            context.rotate(-deg);
+            context.translate(-x, -y);
+        }
+        for (var i = 0; i <= 5; i++) { //验证码上显示线条
+            context.strokeStyle = randomColor();
+            context.beginPath();
+            context.moveTo(Math.random() * canvas_width, Math.random() * canvas_height);
+            context.lineTo(Math.random() * canvas_width, Math.random() * canvas_height);
+            context.stroke();
+        }
+        for (var i = 0; i <= 30; i++) { //验证码上显示小点
+            context.strokeStyle = randomColor();
+            context.beginPath();
+            var x = Math.random() * canvas_width;
+            var y = Math.random() * canvas_height;
+            context.moveTo(x, y);
+            context.lineTo(x + 1, y + 1);
+            context.stroke();
+        }
+    }
+    function randomColor() {//得到随机的颜色值
+        var r = Math.floor(Math.random() * 256);
+        var g = Math.floor(Math.random() * 256);
+        var b = Math.floor(Math.random() * 256);
+        return "rgb(" + r + "," + g + "," + b + ")";
+    }
+</script>
+<script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>

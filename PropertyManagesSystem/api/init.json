@@ -1,0 +1,105 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "Index/Index"
+  },
+  "logoInfo": {
+    "title": "ZDNL小区",   
+    "image": "Content/images/logo.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "常规管理",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "资产信息",
+          "href": "",
+          "icon": "fa fa-home",
+          "target": "_self",
+          "child": [
+            {
+              "title": "房产管理",
+              "href": "HouseInfo/HouseIndex",
+              "icon": "fa fa-bank",
+              "target": "_self"
+            },
+            {
+              "title": "我的小区",
+              "href": "VillageInfo/VillageIndex",
+              "icon": "fa fa-building-o",
+              "target": "_self"
+            },
+            {
+              "title": "楼栋信息",
+              "href": "FloorInfo/FloorIndex",
+              "icon": "fa fa-building",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "业主管理",
+          "href": "UserInfo/UserIndex",
+          "icon": "fa fa-users",
+          "target": "_self"
+        },
+        {
+          "title": "投诉管理",
+          "href": "ComplaInfo/ComplaIndex",
+          "icon": "fa fa-comments-o",
+          "target": "_self"
+        },
+        {
+          "title": "报修管理",
+          "href": "RepairInfo/RepairIndex",
+          "icon": "fa fa-wrench",
+          "target": "_self"
+        },
+        {
+          "title": "缴费管理",
+          "href": "",
+          "icon": "fa fa-jpy",
+          "target": "_self",
+          "child": [
+            {
+              "title": "水电费用",
+              "href": "CostInfo/CostIndex",
+              "icon": "fa fa-tint",
+              "target": "_self"
+            },
+            {
+              "title": "物业费用",
+              "href": "PropertyInfo/PropertyIndex",
+              "icon": "fa fa-calendar",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "系统管理",
+          "href": "",
+          "icon": "fa fa-gears",
+          "target": "_self",
+          "child": [
+            {
+              "title": "用户信息管理",
+              "href": "AdminInfo/AdminIndex",
+              "icon": "fa fa-user",
+              "target": "_self"
+            },
+            {
+              "title": "角色信息管理",
+              "href": "RoleInfo/RoleIndex",
+              "icon": "fa fa-user",
+              "target": "_self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

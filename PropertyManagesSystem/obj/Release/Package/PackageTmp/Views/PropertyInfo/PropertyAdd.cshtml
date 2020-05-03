@@ -1,0 +1,123 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">房屋编号</label>
+            <div class="layui-input-block">
+                <select name="HousID" id="Housid" lay-filter="Housid" lay-verify="required">
+                    <option value="">请选择</option>
+                    @foreach (var item in ViewBag.Hous)
+                    {
+                        <option value=@item.HousID>@item.HousID</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">缴费月份</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="MonthID" name="Month" placeholder="请选择月份" readonly="readonly" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">物业费/月</label>
+            <div class="layui-input-block">
+                <input type="text" name="PropertyCost" id="PropertyCost" lay-verify="required" placeholder="请输入" class="layui-input" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">录入员</label>
+            <div class="layui-input-block">
+                <input type="text" name="AdminID" lay-verify="required" placeholder="请输入..." class="layui-input" value="@ViewBag.userName " readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="State" value="0" title="未缴费" checked="" id="stateRadio1">
+                <input type="radio" name="State" value="1" title="已缴费" id="stateRadio2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认添加</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form//实例化
+            var layedit = layui.layedit
+            var laydate = layui.laydate
+                , layer = layui.layer
+                , $ = layui.$
+            //年月选择器
+            laydate.render({
+                elem: '#MonthID'
+                , type: 'month'
+                , trigger: 'click'
+            });
+
+            //下拉框监听
+
+            form.on('select(Housid)', function (data) {
+
+                console.log(data.value);
+                var HousID = data.value;//得到被选中的值
+                //使用Ajax
+                $.ajax({
+                    url: '/PropertyInfo/GetPropertyCost?HousID=' + HousID + '',//请求地址
+                    type: 'post',//请求方式
+                    //回调函数，data就是后台返回的数据
+                    success: function (data) {
+
+                        $('#PropertyCost').val(data)
+                    }
+                });
+            });
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var PropertyInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/PropertyInfo/PropertyInfoAdd',
+                    type: 'POST',
+                    data: {
+                        PropertyInfoJson: PropertyInfoJson
+                    },
+
+                    success: function (data) {
+                        if (data == "ok") {
+                            layer.alert("添加成功");
+                        }
+                        else {
+                            alert("添加失败，请重新添加！");
+                        }
+                    }
+                })
+                return false;
+            });
+
+        });
+    </script>
+
+</body>
+</html>

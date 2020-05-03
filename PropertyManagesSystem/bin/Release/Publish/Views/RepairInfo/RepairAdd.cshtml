@@ -1,0 +1,60 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    <script src="~/Content/Home/myjs/jquery-1.10.2.min.js"></script>
+    <script src="~/Content/Home/layui/layui.js"></script>
+    <link href="~/Content/Home/layui/css/layui.css" rel="stylesheet" media="all" />
+</head>
+<body>
+    <div class="layui-col-md8">
+        <form class="layui-form layui-form-pane" lay-filter="form_add" action="/RepairInfo/Add" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋编号</label>
+                <div class="layui-input-inline ">
+                    <select name="HousID" id="HousID" onchange="func()">
+                        @foreach (var item in ViewBag.Hous)
+                        {
+                            <option value=@item.HousID>@item.HousID</option>
+                        }
+                    </select>
+                </div>
+                <label class="layui-form-label">操作员</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="AdminName" lay-verify="required" class="layui-input" value="@ViewBag.userName" readonly="readonly" style="color:red;">
+                </div>
+               
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="Phone" lay-verify="required|phone" class="layui-input">
+                </div>
+                <label class="layui-form-label">报修内容</label>
+                <div class="layui-input-inline ">
+                    <input type="text" name="Rreason" lay-verify="required" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline ">
+                    <textarea class="layui-input" name="Remarks" id="RemarksID" style="height:100px; width:500px;" placeholder="请填写备注"></textarea>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item" style="text-align:center">
+                <button class="layui-btn" lay-submit="" lay-filter="btn_update"><i class="layui-icon layui-icon-ok"></i> 确认添加</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+
+        });
+    </script>
+</body>
+</html>

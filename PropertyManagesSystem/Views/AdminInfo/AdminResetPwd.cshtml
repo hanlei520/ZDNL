@@ -1,0 +1,137 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdminResetPwd</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">当前密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="PassWord" lay-verify="required|isrepeat|maxlength" placeholder="请输入当前密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="NewPwd" id="NewPwd" lay-verify="required" placeholder="请输入新密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="Pwd" id="Pwd" lay-verify="required|repass" placeholder="请再次输入新密码" class="layui-input" onkeyup="validate()">
+                <span id="tishi"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+
+
+            //自定义验证规则-->value就是文本框里的值
+            form.verify({
+                maxlength: function (value) {
+
+                    var res = /^[A-Za-z0-9]+$/;
+                    if (!res.test(value) || value.length > 16) {
+                        return '密码由数字英文字母组成！且最多16位字符！';
+                    }
+                },
+                //判断当前密码是否正确
+                isrepeat: function (value) {
+                    var callbackdata;
+                    $.ajax({
+                        url: "/AdminInfo/CheckPwd",
+                        type: "post",
+                        async: false,//同步-保证验证通过之后，才执行表单的提交
+                        data: {
+                            value: value
+                        },
+                        success: function (data) {
+                            callbackdata = data;
+
+                        }
+                    });
+                    if (callbackdata == "no") {
+                        return ("当前密码错误，请重新输入！");
+                    }
+                }
+            });
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var AdminInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/AdminInfo/ResetPwd',
+                    type: 'POST',
+                    data: {
+                        AdminInfoJson: AdminInfoJson
+                    },
+                    success: function (data) {
+                        if (data == "ok") {
+                            var index = layer.alert("修改成功", {
+                                title: '温馨提示'
+                            }, function () {
+                                // 关闭弹出层
+                                layer.close(index);
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(iframeIndex);
+                            })
+
+                        }
+                        else {
+                            layer.alert("修改失败，请重试！");
+                        }
+                    }
+                })
+                return false;
+            });
+
+        });
+        function validate() {
+
+            var pwd1 = document.getElementById("NewPwd").value;
+
+            var pwd2 = document.getElementById("Pwd").value;
+
+
+
+            //<!-- 对比两次输入的密码 -->
+
+            if (pwd1 == pwd2) {
+                document.getElementById("tishi").innerHTML = "<font color='green'>两次密码相同</font>";
+                document.getElementById("button").disabled = false;
+            }
+            else {
+                document.getElementById("tishi").innerHTML = "<font color='red'>两次密码不相同</font>";
+                document.getElementById("button").disabled = true;
+            }
+        }
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateIndex</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">楼栋编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="FloorID" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.FloorID" readonly="readonly" style="color:red">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">楼栋名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="FloorName" lay-verify="required" lay-reqtext="楼栋名称不能为空" placeholder="请输入楼栋名称" class="layui-input" value="@ViewBag.model.FloorName">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="Remarks" class="layui-textarea" placeholder="请输入备注信息">@ViewBag.model.Remarks</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/table/js")
+    <script>
+        //使用layui的form模块
+        layui.use(['form'], function () {
+            var form = layui.form//实例化
+                , layer = layui.layer
+                , $ = layui.$
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var FloorInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/FloorInfo/FloorInfoUpdate',
+                    type: 'POST',
+                    data: {
+                        FloorInfoJson: FloorInfoJson
+                    },
+                    success: function (data) {
+                        if (data == "ok") {
+                            var index = layer.alert("修改成功", {
+                                title: '温馨提示'
+                            }, function () {
+                                // 关闭弹出层
+                                layer.close(index);
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(iframeIndex);
+                                    window.parent.btn_search();//刷新父窗口表格
+                            })
+                        }
+                        else {
+                            alert("修改失败，请重新修改！");
+                        }
+                    }
+                })
+                return false;
+            });
+
+        });
+    </script>
+</body>
+</html>
+

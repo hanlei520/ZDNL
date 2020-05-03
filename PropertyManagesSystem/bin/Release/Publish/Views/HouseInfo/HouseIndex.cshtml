@@ -1,0 +1,291 @@
+﻿
+<div class="layui-row">
+    <span>资产信息-->房产信息管理</span>
+</div>
+<div class="layui-row layui-form">
+    <div class="layui-col-md2" style="margin-top:20px;width:150px;margin-left:20px;">
+        <select name="VillageID" id="Villageid">
+            <option value="">请选择小区</option>
+            @foreach (var item in @ViewBag.Village)
+            {
+                <option value=@item.VillageID>@item.VillageName</option>
+            }
+        </select>
+    </div>
+    @*<div class="layui-col-md2" style="margin-top:20px;margin-left:20px;width:150px;">
+        <select name="quiz2" id="FloorSelectID">
+            <option value="">请选择楼栋编号</option>
+            @foreach (var item in @ViewBag.FloorInfo)
+            {
+                <option value=@item.FloorID>@item.FloorName</option>
+            }
+        </select>
+    </div>*@
+
+    <div class="layui-col-md2 " style="margin-left:20px; margin-top:20px;width:150px;">
+
+        <select name="State" id="State">
+            <option value="">请选择状态</option>
+            <option value="False">已售</option>
+            <option value="True">未售</option>
+        </select>
+    </div>
+
+    <div class="layui-col-md2 " style="margin-top:20px;margin-left:20px;width:150px;"><input type="text" id="txt_Select" placeholder="请输入房屋编号" class="layui-input"></div>
+    <div class="layui-col-md1" style="margin-top:20px"> <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button></div>
+</div>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-radius" lay-event="btn_add"><i class="layui-icon">&#xe608;</i>添加</button>
+        <button class="layui-btn layui-btn-radius" lay-event="btn_update"><i class="layui-icon">&#xe642;</i>修改</button>
+        <button class="layui-btn layui-btn-radius layui-btn-danger" lay-event="btn_delete"><i class="layui-icon"></i>删除</button>
+        <button class="layui-btn layui-btn-radius layui-btn-warm" lay-event="btn_empty">置空房间</button>
+    </div>
+</script>
+
+
+
+<script type="text/html" id="stateTpl">
+    {{#  if(d.State == 0){ }}
+    <span style="color: #5FB878;">已售</span>
+    {{#  } else { }}
+    <span style="color: #1E9FFF;">未售</span>
+    {{#  } }}
+</script>
+
+<script>
+
+    //使用layui的table模块
+
+    var table;
+
+    layui.use('table', function () {
+        //实例化layui的table模块
+        table = layui.table;
+
+        var form = layui.form;
+
+        //渲染表格
+        table.render({
+            elem: '#test'//把表格渲染在id为test的标签中
+            , url: '/HouseInfo/GetHouseInfo'//数据接口，即后台地址
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+            , title: '房产数据表'
+
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' }
+                , { field: 'ID', title: 'ID', fixed: 'left', unresize: true, sort: true }
+                , { field: 'VillageName', title: '小区', sort: true, unresize: true }
+                , { field: 'FloorName', title: '楼栋编号', sort: true, unresize: true }
+                , { field: 'HousID', title: '房屋编号', unresize: true }
+                , { field: 'HouseType', title: '户型', sort: false, unresize: true }
+                , { field: 'State', title: '状态', sort: true, unresize: true, templet: '#stateTpl' }
+                , { field: 'UserName', title: '业主', sort: true, unresize: true }
+                , { field: 'HouseArea', title: '房屋面积', sort: true, unresize: true }
+                , { field: 'Purpose', title: '用途', unresize: true }
+                , { field: 'PropertyCost', title: '物业费', sort: true, unresize: true }
+
+
+
+            ]]
+            , page: true//是否开启分页
+        });
+
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            debugger;
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'btn_add':
+
+                    //iframe窗--弹出添加窗体
+                    layer.open({
+                        type: 2,//iframe
+                        title: '房屋信息添加',
+                        shade: 0.6,
+                        area: ['700px', '330px'],
+                        content: '/HouseInfo/HouseAdd',//页面地址
+                        cancel: function (index) {
+                            //关闭窗口
+                            layer.close(index);
+                            //重新加载表格
+                            btn_search();
+                        }
+                    });
+
+                    break;
+                case 'btn_update':
+                    debugger;
+                    //获取选中的信息
+                    var data = checkStatus.data;
+                    if (data.length == 1) {
+                        //转成json格式的字符串
+                        var strdata = JSON.stringify(data);
+                        //转成json对象
+                        var jsondata = JSON.parse(strdata);
+                        //获取id
+                        var id = jsondata[0].ID;
+                        //iframe窗--弹出添加窗体
+                        layer.open({
+                            type: 2,//iframe
+                            title: '房屋信息修改',
+                            shade: 0.6,
+                            area: ['700px', '330px'],
+                            content: '/HouseInfo/HouseUpdate?id=' + id + '',//页面地址
+                            cancel: function (index) {
+                                //关闭窗口
+                                layer.close(index);
+                                //重新加载表格
+                                btn_search();
+                            }
+                        });
+                    } else {
+                        layer.alert("必须选中且只能选中一条数据！");
+                    }
+                    break;
+                case 'btn_delete':
+                    //获取选中的信息
+                     var data = checkStatus.data;
+                    if (data.length <= 0) {
+                        layer.alert("必须选中一条数据！");
+                    }
+                    else {
+                        //定义数组对象
+                        var mycars = new Array()
+                        //转成json格式的字符串
+                        var strdata1 = JSON.stringify(data);
+                        //转成json对象
+                        var jsondata1 = JSON.parse(strdata1);
+                        //循环取选中ID
+                        for (var i = 0; i < data.length; i++) {
+                            //获取id
+                            mycars[i] = jsondata1[i].ID;
+                        }
+                        //执行删除-->调用删除方法
+                        if (confirm("确定删除吗？删除将无法恢复！")) {
+                            btn_Delete(mycars);
+                        }
+                    }
+
+                    break;
+                case 'btn_empty':
+
+                    //获取选中的信息
+                    debugger
+                    var data = checkStatus.data;
+                    if (data.length <= 0) {
+                        layer.alert("必须选中一条数据！");
+                    }
+                    else {
+                        //定义数组对象
+                        var mycars = new Array()
+                        //转成json格式的字符串
+                        var strdata1 = JSON.stringify(data);
+                        //转成json对象
+                        var jsondata1 = JSON.parse(strdata1);
+                        //循环取选中ID
+                        for (var i = 0; i < data.length; i++) {
+                            //获取id
+                            mycars[i] = jsondata1[i].ID;
+                        }
+                        //执行重置-->调用重置
+                        if (confirm("确定重置吗？")) {
+                              btn_Empty(mycars);
+                        }                     
+                    }
+                    break;
+
+            };
+        });
+    });
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render();
+    });
+
+    //删除方法
+    btn_Delete = function (ID) {
+        debugger
+        $.ajax({
+            type: 'post',
+            url: '/HouseInfo/Delete',
+            data: {
+                id: ID,
+            },
+            success: function (data) {
+
+                if (data == "ok") {
+                    layer.alert("删除成功！");
+                    //重新加载表示
+                    btn_search();
+                }
+                else {
+                    layer.alert("删除失败！请先置空房间再删除！");
+                }
+
+            }
+        });
+    };
+
+    //密码重置方法
+    btn_Empty = function (ID) {
+        debugger
+        $.ajax({
+            type: 'post',
+            url: '/HouseInfo/Empty',
+            data: {
+                id: ID,
+            },
+            success: function (data) {
+
+                if (data == "ok") {
+                    layer.alert("置空成功！");
+                    //重新加载表示
+                    btn_search();
+                }
+                else {
+                    layer.alert("置空失败！");
+                }
+
+            }
+        });
+    };
+
+    //查询
+    btn_search = function () {
+        //获取文本框的值
+        var selectInfo = $("#txt_Select").val();
+        debugger
+        $("#Villageid").val();//获取当前选择项的值.
+        var options = $("#Villageid option:selected");//获取当前选择项.
+        var VillageID = options.val();//获取当前选择项的值.
+        debugger
+        //$("#FloorSelectID").val();//获取当前选择项的值.
+        //var options2 = $("#FloorSelectID option:selected");//获取当前选择项.
+        //var FloorID = options2.val();//获取当前选择项的值.
+        debugger
+        $("#State").val();//获取当前选择项的值.
+        var options3 = $("#State option:selected");//获取当前选择项.
+        var State = options3.val();//获取当前选择项的值.
+        //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+        table.reload('test', {
+            url: '/HouseInfo/GetHouseInfo',
+            page: {
+                curr: 1//从第一页开始
+            },
+            where: {
+
+                selectInfo: selectInfo,//设定异步数据接口的额外参数
+                VillageID: VillageID,
+                //FloorID: FloorID,
+                State: State,
+            }
+        });
+    };
+
+</script>
+

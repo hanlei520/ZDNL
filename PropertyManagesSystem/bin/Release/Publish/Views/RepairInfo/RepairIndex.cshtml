@@ -1,0 +1,270 @@
+﻿<div class="layui-row">
+    <span>--> 业主报修</span>
+</div>
+
+<div class="layui-row layui-form">
+    <div class="layui-input-inline layui-col-md1  " style="margin-top:20px;margin-left:20px;">
+        <div class="layui-input-inline">
+            <input type="text" name="RsubmitData" id="date1" lay-verify="date" placeholder="开始日期" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-input-inline layui-col-md1  " style="margin-top:20px;margin-left:20px;">
+        <div class="layui-input-inline">
+            <input type="text" name="RsubmitData2" id="date2" lay-verify="date" placeholder="截止日期" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-input-inline layui-col-md2  " style="margin-top:20px;margin-left:20px;">
+        <select name="modules" lay-verify="required" lay-search="" id="State">
+            <option value="">请选择状态</option>
+            <option value="0">已处理</option>
+            <option value="1">处理中</option>
+            <option value="2">未处理</option>
+            <option value="3">取消</option>
+        </select>
+    </div>
+    <div class="layui-col-md2  " style="margin-top:20px;margin-left:20px;"><input type="text" id="txt_HousID" placeholder="请输入房间编号" class="layui-input"></div>
+    <div class="layui-col-md1" style="margin-top:20px;"> <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button></div>
+</div>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-radius" lay-event="btn_Add"><i class="layui-icon">&#xe608;</i>添加</button>
+        <button class="layui-btn layui-btn-radius" lay-event="btn_Handle"><i class="layui-icon">&#xe642;</i>处理</button>
+        <button class="layui-btn layui-btn-radius" lay-event="btn_Update"><i class="layui-icon">&#xe642;</i>修改</button>
+        <button class="layui-btn layui-btn-radius layui-btn-danger" lay-event="btn_Delete"><i class="layui-icon"></i>删除</button>
+    </div>
+</script>
+
+
+<script type="text/html" id="stateTpl">
+    {{# if (d.State === 0) { }}
+    <span style="color:#009688;">已处理</span>
+    {{# } else if(d.State === 1) { }}
+    <span style="color:#1E9FFF;">处理中</span>
+    {{# } else if(d.State === 2) { }}
+    <span style="color:#FF5722;">未处理</span>
+    {{# } else { }}
+    <span style="color:#2F4056;">取消</span>
+    {{# } }}
+</script>
+
+
+
+<script>
+
+    //使用layui的table模块
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form;
+        var layedit = layui.layedit;
+        var laydate = layui.laydate;
+        //日期
+        laydate.render({
+            elem: '#date1'
+        });
+        laydate.render({
+            elem: '#date2'
+        });
+        form.render();
+    });
+    var table;
+
+    layui.use('table', function () {
+        //实例化layui的table模块
+        table = layui.table;
+
+        //渲染表格
+        table.render({
+            elem: '#test'//把表格渲染在id为test的标签中
+            , url: '/RepairInfo/GetRepairInfo'//数据接口，即后台地址
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+            , title: '业主报修信息'
+
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' }
+                , { field: 'ID', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+                , { field: 'RepairID', title: '报修编号', sort: true }
+                , { field: 'UserName', title: '业主姓名' }
+                , { field: 'HousID', title: '房屋编号', sort: true }
+                , { field: 'Rreason', title: '报修内容', sort: true }
+                , { field: 'Phone', title: '联系电话', sort: true }
+                , { field: 'RsubmitData', title: '提交日期' }
+
+
+                , { field: 'State', title: '状态', templet: '#stateTpl' }
+                , { field: 'RsolveData', title: '解决日期', sort: true }
+                , { field: 'AdminName', title: '操作员' }
+                , { field: 'Remarks', title: '备注' }
+
+            ]]
+            , page: true//是否开启分页
+        });
+
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            debugger;
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'btn_Add':
+                    //iframe窗--弹出添加窗体
+                    layer.open({
+                        type: 2,//iframe
+                        title: '添加报修信息',
+                        shade: 0.6,
+                        area: ['700px', '600px'],
+                        content: '/RepairInfo/RepairAdd',     //页面地址
+                        cancel: function (index) {
+                            //关闭窗口
+                            layer.close(index);
+                            //重新加载表格
+                            btn_search();
+                        }
+                    });
+                    break;
+                case 'btn_Update':
+                    //获取选中的个数
+                    if (checkStatus.data.length == 1) {
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        //转成json格式的字符串
+                        var strdata = JSON.stringify(data);
+                        //转成json格式
+                        var jsondata = JSON.parse(strdata);
+                        //调用更新的方法
+                        var RepairID = jsondata[0].RepairID
+                        //iframe窗--弹出添加窗体
+                        layer.open({
+                            type: 2,//iframe
+                            title: '修改报修信息',
+                            shade: 0.6,
+                            area: ['700px', '600px'],
+                            content: '/RepairInfo/RepairUpdate?RepairID=' + RepairID + '',//页面地址
+                            cancel: function (index) {
+                                //关闭窗口
+                                layer.close(index);
+                                //重新加载表格
+                                btn_search();
+                            }
+                        });
+                    } else {
+                        layer.alert("必须选中且只能选中一条信息！");
+                    }
+                    break;
+                case 'btn_Handle':
+                    //获取选中的个数
+                    if (checkStatus.data.length == 1) {
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        //转成json格式的字符串
+                        var strdata = JSON.stringify(data);
+                        //转成json格式
+                        var jsondata = JSON.parse(strdata);
+                        //调用更新的方法
+                        debugger;
+                        var RepairID = jsondata[0].RepairID
+                        //iframe窗--弹出添加窗体
+                        layer.open({
+                            type: 2,//iframe
+                            title: '处理报修信息',
+                            shade: 0.6,
+                            area: ['700px', '600px'],
+                            content: '/RepairInfo/RepairUpdate?RepairID=' + RepairID + '',//页面地址
+                            cancel: function (index) {
+                                //关闭窗口
+                                layer.close(index);
+                                //重新加载表格
+                                btn_search();
+                            }
+                        });
+                    } else {
+                        layer.alert("必须选中且只能选中一条信息！");
+                    }
+                    break;
+                case 'btn_Delete':
+                    //获取选中的信息
+                    var data = checkStatus.data;
+                    if (data.length <= 0) {
+                        layer.alert("必须选中一条数据！");
+                    }
+                    else {
+                        //定义数组对象
+                        var mycars = new Array()
+                        //转成json格式的字符串
+                        var strdata1 = JSON.stringify(data);
+                        //转成json对象
+                        var jsondata1 = JSON.parse(strdata1);
+                        //循环取选中ID
+                        for (var i = 0; i < data.length; i++) {
+                            //获取id
+                            mycars[i] = jsondata1[i].ID;
+                        }
+                        //执行删除-->调用删除方法
+                        if (confirm("确定删除吗？删除将无法恢复！")) {
+                            btn_Delete(mycars);
+                        }
+                    }
+                    break;
+            };
+        });
+    });
+
+    //查询
+    btn_search = function () {
+        //获取文本框的值
+        debugger
+          var RsubmitDate = $("#date1").val();
+        var EndDate = $("#date2").val();
+        if (RsubmitDate==""&&EndDate!="") {
+            layer.alert('请选择开始时间！');
+             return false;
+        }
+        if (EndDate==""&&RsubmitDate!="") {
+            layer.alert('请选择结束时间！');
+             return false;
+        }
+        if (RsubmitDate != '' && EndDate != '') {
+            if (RsubmitDate > EndDate) {
+                layer.alert('结束时间不能小于开始时间！');
+                return false;
+            }
+        }
+        var HousID = $("#txt_HousID").val();
+        var State = $("#State").val();
+        //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+        table.reload('test', {
+            url: '/RepairInfo/GetRepairInfo',
+            page: {
+                curr: 1//从第一页开始
+            },
+            where: {
+                RsubmitDate: RsubmitDate,
+                EndDate:EndDate,
+                HousID: HousID,
+                State: State,//设定异步数据接口的额外参数
+            }
+        });
+    };
+    //删除方法
+    btn_Delete = function (ID) {
+        debugger
+        $.ajax({
+            type: 'post',
+            url: '/RepairInfo/Delete',
+            data: {
+                id: ID,
+            },
+            success: function (data) {
+
+                if (data == "ok") {
+                    layer.alert("删除成功！");
+                    //重新加载表示
+                    btn_search();
+                }
+                else {
+                    layer.alert("删除失败！");
+                }
+            }
+        });
+    };
+</script>

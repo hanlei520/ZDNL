@@ -1,0 +1,194 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/FloorInfo/css")
+</head>
+<body>
+
+
+    <div class="layui-row layui-form">
+        <div class="layui-col-md2 " style="margin-top:20px; margin-left:20px;"><input type="text" id="txt_Select" placeholder="请输入楼栋名称" class="layui-input"></div>
+        <div class="layui-col-md1" style="margin-top:20px;"> <button class="layui-btn layui-btn-normal" onclick="btn_search()"><i class="layui-icon">&#xe615;</i>搜索</button></div>
+    </div>
+
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+    @Scripts.Render("~/FloorInfo/js")
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-radius" lay-event="btn_add"><i class="layui-icon">&#xe608;</i>添加</button>
+            <button class="layui-btn layui-btn-radius" lay-event="btn_update"><i class="layui-icon">&#xe642;</i>修改</button>
+            <button class="layui-btn layui-btn-radius layui-btn-danger" lay-event="btn_delete"><i class="layui-icon"></i>删除</button>
+
+
+        </div>
+    </script>
+
+
+    <script>
+
+        //使用layui的table模块
+
+        var table;
+
+        layui.use('table', function () {
+            //实例化layui的table模块
+            table = layui.table;
+
+            var form = layui.form;
+
+            //渲染表格
+            table.render({
+                elem: '#test'//把表格渲染在id为test的标签中
+                , url: '/FloorInfo/GetFloorInfo'//数据接口，即后台地址
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+                , title: '楼栋数据表'
+
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'ID', title: 'ID', fixed: 'left', unresize: true, sort: true }
+                    , { field: 'FloorID', title: '楼栋编号' }
+                    , { field: 'FloorName', title: '楼栋名称', sort: true }
+                    , { field: 'Remarks', title: '备注', sort: false }
+                ]]
+                , page: true//是否开启分页
+            });
+
+            //头工具栏事件
+            table.on('toolbar(test)', function (obj) {
+                ;
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'btn_add':
+
+                        //iframe窗--弹出添加窗体
+                        var index= layer.open({
+                            type: 2,//iframe
+                            title: '楼栋信息添加',
+                            shade: 0.6,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['100%', '100%'],
+                            content: '/FloorInfo/FloorAdd',//页面地址
+                            cancel: function (index) {
+                                //关闭窗口
+                                layer.close(index);
+                                //重新加载表格
+                                btn_search();
+                            }
+                        });
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                        break;
+                    case 'btn_update':
+                        ;
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        if (data.length == 1) {
+                            //转成json格式的字符串
+                            var strdata = JSON.stringify(data);
+                            //转成json对象
+                            var jsondata = JSON.parse(strdata);
+                            //获取id
+                            var id = jsondata[0].ID;
+                            //iframe窗--弹出添加窗体
+                          var index=layer.open({
+                                type: 2,//iframe
+                                title: '楼栋信息修改',
+                                shade: 0.6,
+                                maxmin: true,
+                                shadeClose: true,
+                                area: ['100%', '100%'],
+                                content: '/FloorInfo/FloorUpdate?id=' + id + '',//页面地址
+                            });
+                            $(window).on("resize", function () {
+                                layer.full(index);
+                            });
+                        } else {
+                            layer.alert("必须选中且只能选中一条数据！");
+                        }
+                        break;
+                    case 'btn_delete':
+                        //获取选中的信息
+                        var data = checkStatus.data;
+                        if (data.length <= 0) {
+                            layer.alert("必须选中一条数据！");
+                        }
+                        else {
+                            //定义数组对象
+                            var mycars = new Array()
+                            //转成json格式的字符串
+                            var strdata1 = JSON.stringify(data);
+                            //转成json对象
+                            var jsondata1 = JSON.parse(strdata1);
+                            //循环取选中ID
+                            for (var i = 0; i < data.length; i++) {
+                                //获取id
+                                mycars[i] = jsondata1[i].ID;
+                            }
+                            //执行删除-->调用删除方法
+                            if (confirm("确定删除吗？删除将无法恢复！")) {
+                                btn_Delete(mycars);
+                            }
+                        }
+                        break;
+
+                };
+            });
+
+        });
+
+        //删除方法
+        btn_Delete = function (ID) {
+            
+            $.ajax({
+                type: 'post',
+                url: '/FloorInfo/Delete',
+                data: {
+                    id: ID,
+                },
+                success: function (data) {
+
+
+                    if (data == "ok") {
+                        layer.alert("删除成功！");
+                        //重新加载表示
+                        btn_search();
+                    }
+                    else {
+                        layer.alert("删除失败！");
+                    }
+
+                }
+            });
+        };
+        //查询
+        btn_search = function () {
+            //获取文本框的值
+            var selectInfo = $("#txt_Select").val();
+            //把文本框的值通过layui table的reload重新传给后台并重新加载表格
+            table.reload('test', {
+                url: '/FloorInfo/GetFloorInfo',
+                page: {
+                    curr: 1//从第一页开始
+                },
+                where: {
+                    selectInfo: selectInfo,//设定异步数据接口的额外参数
+                }
+            });
+        };
+
+    </script>
+</body>
+</html>
+
+

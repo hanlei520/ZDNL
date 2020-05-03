@@ -1,0 +1,117 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdminAlter</title>
+    @Styles.Render("~/table/css")
+    <style>
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">用户账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="AdminID" lay-verify="required"  class="layui-input" value="@ViewBag.model.AdminID" readonly="readonly" style="color:red;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">用户姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" lay-verify="required" placeholder="请输入" class="layui-input" value="@ViewBag.model.Name">
+                <tip>填写用户姓名。</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">手机号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" lay-verify="required|phone" lay-reqtext="手机号码不能为空" placeholder="请输入手机号码" class="layui-input" value="@ViewBag.model.Phone">
+                <tip>填写用户手机号码。</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">邮箱地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="Email" lay-verify="required|email" lay-reqtext="邮箱地址不能为空" placeholder="请输入邮箱地址"  value="@ViewBag.model.Email" class="layui-input">
+                <tip>填写用户邮箱地址。</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="Sex" value="0" title="男" checked="" id="sexRadio1">
+                <input type="radio" name="Sex" value="1" title="女" id="sexRadio2">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认添加</button>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/table/js")
+    <script>
+
+    //动态设置单选框的选中
+
+    if (@ViewBag.model.Sex == 1) {
+        $("#sexRadio1").prop("checked", false);
+        $("#sexRadio2").prop("checked", true);
+    }
+
+    if (@ViewBag.model.Sex == 0) {
+        $("#sexRadio1").prop("checked", true);
+        $("#sexRadio2").prop("checked", false);
+            }
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+            var layedit = layui.layedit
+            layer = layui.layer,
+                $ = layui.$;
+            form.render();
+
+             //监听提交
+            form.on('submit(saveBtn)', function (data) {
+
+                var AdminInfoJson = JSON.stringify(data.field);
+                $.ajax({
+                    url: '/AdminInfo/AlterUpdate',
+                    type: 'POST',
+                    data: {
+                        AdminInfoJson: AdminInfoJson
+                    },
+                    success: function (data) {
+                        if (data == "ok") {
+                           var index = layer.alert("修改成功,信息将在下次登录更新", {
+                                title: '温馨提示'
+                            }, function () {
+                                // 关闭弹出层
+                                layer.close(index);
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(iframeIndex);
+                           })
+
+                        }
+                        else {
+                           layer.alert("修改失败，请重试！");
+                        }
+                    }
+                })
+                return false;
+            });
+
+        });
+    </script>
+</body>
+</html>
