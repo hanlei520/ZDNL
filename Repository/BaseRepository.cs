@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Repository
 {
     /// <summary>
-    /// 基本的数据仓储，存放最基本的增删查改操作
+    /// 基本的数据仓储，存放最基本的增删查改操作。
     /// </summary>
     public class BaseRepository<T> where T : class//泛型约束：调用者确定T的类型时，必须是一个引用类型
     {
