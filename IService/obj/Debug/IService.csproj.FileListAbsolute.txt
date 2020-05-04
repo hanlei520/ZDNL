@@ -129,3 +129,17 @@ E:\实训\小组项目\Layuimini版\PropertyManagesSystem\IService\obj\Debug\ISe
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\IService\obj\Debug\IService.csproj.CopyComplete
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\IService\obj\Debug\IService.dll
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\IService\obj\Debug\IService.pdb
+F:\GitHubCode\ZDNL\IService\bin\Debug\IService.dll
+F:\GitHubCode\ZDNL\IService\bin\Debug\IService.pdb
+F:\GitHubCode\ZDNL\IService\bin\Debug\DataModel.dll
+F:\GitHubCode\ZDNL\IService\bin\Debug\EntityModel.dll
+F:\GitHubCode\ZDNL\IService\bin\Debug\EntityFramework.dll
+F:\GitHubCode\ZDNL\IService\bin\Debug\DataModel.pdb
+F:\GitHubCode\ZDNL\IService\bin\Debug\DataModel.dll.config
+F:\GitHubCode\ZDNL\IService\bin\Debug\EntityModel.pdb
+F:\GitHubCode\ZDNL\IService\bin\Debug\EntityFramework.xml
+F:\GitHubCode\ZDNL\IService\bin\Debug\zh-Hans\EntityFramework.resources.dll
+F:\GitHubCode\ZDNL\IService\obj\Debug\IService.csprojAssemblyReference.cache
+F:\GitHubCode\ZDNL\IService\obj\Debug\IService.csproj.CopyComplete
+F:\GitHubCode\ZDNL\IService\obj\Debug\IService.dll
+F:\GitHubCode\ZDNL\IService\obj\Debug\IService.pdb

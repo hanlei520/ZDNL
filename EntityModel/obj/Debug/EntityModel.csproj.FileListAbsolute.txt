@@ -50,3 +50,8 @@ E:\实训\小组项目\Layuimini版\PropertyManagesSystem\EntityModel\obj\Debug\
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\EntityModel\obj\Debug\EntityModel.csproj.CoreCompileInputs.cache
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\EntityModel\obj\Debug\EntityModel.dll
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\EntityModel\obj\Debug\EntityModel.pdb
+F:\GitHubCode\ZDNL\EntityModel\bin\Debug\EntityModel.dll
+F:\GitHubCode\ZDNL\EntityModel\bin\Debug\EntityModel.pdb
+F:\GitHubCode\ZDNL\EntityModel\obj\Debug\EntityModel.csprojAssemblyReference.cache
+F:\GitHubCode\ZDNL\EntityModel\obj\Debug\EntityModel.dll
+F:\GitHubCode\ZDNL\EntityModel\obj\Debug\EntityModel.pdb

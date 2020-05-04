@@ -118,3 +118,16 @@ E:\实训\小组项目\Layuimini版\PropertyManagesSystem\DataModel\obj\Debug\Da
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\DataModel\obj\Debug\DataModel.csproj.CopyComplete
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\DataModel\obj\Debug\DataModel.dll
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\DataModel\obj\Debug\DataModel.pdb
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\DataModel.dll.config
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\DataModel.dll
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\DataModel.pdb
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\EntityFramework.dll
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\EntityFramework.SqlServer.dll
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\EntityFramework.xml
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\EntityFramework.SqlServer.xml
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\zh-Hans\EntityFramework.resources.dll
+F:\GitHubCode\ZDNL\DataModel\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
+F:\GitHubCode\ZDNL\DataModel\obj\Debug\DataModel.csprojAssemblyReference.cache
+F:\GitHubCode\ZDNL\DataModel\obj\Debug\DataModel.csproj.CopyComplete
+F:\GitHubCode\ZDNL\DataModel\obj\Debug\DataModel.dll
+F:\GitHubCode\ZDNL\DataModel\obj\Debug\DataModel.pdb

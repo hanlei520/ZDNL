@@ -43,3 +43,8 @@ E:\实训\小组项目\Layuimini版\PropertyManagesSystem\Common\obj\Debug\Commo
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\Common\obj\Debug\Common.dll
 E:\实训\小组项目\Layuimini版\PropertyManagesSystem\Common\obj\Debug\Common.pdb
+F:\GitHubCode\ZDNL\Common\bin\Debug\Common.dll
+F:\GitHubCode\ZDNL\Common\bin\Debug\Common.pdb
+F:\GitHubCode\ZDNL\Common\obj\Debug\Common.csprojAssemblyReference.cache
+F:\GitHubCode\ZDNL\Common\obj\Debug\Common.dll
+F:\GitHubCode\ZDNL\Common\obj\Debug\Common.pdb
