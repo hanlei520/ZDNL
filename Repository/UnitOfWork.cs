@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Repository
 {
     /// <summary>
-    /// 工作单元，当需要使用事务的时候调用
+    /// 工作单元，当需要使用事务的时候调用。
     /// </summary>
     public class UnitOfWork
     {
